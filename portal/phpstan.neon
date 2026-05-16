@@ -1,0 +1,24 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests
+
+    level: 6
+
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache
+
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        # Generated migration files use `up()` / `down()` without typed return; Laravel norm.
+        - '#Method .*::up\(\) has no return type specified#'
+        - '#Method .*::down\(\) has no return type specified#'
