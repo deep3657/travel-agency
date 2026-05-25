@@ -1,11 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.change-requests.index') }}" class="text-gray-400 hover:text-gray-600">← Change Requests</a>
-            <h2 class="font-semibold text-xl text-gray-800">Change Request</h2>
-        </div>
+        <x-page-header
+            title="Change request"
+            :subtitle="$changeRequest->booking->booking_ref"
+            :breadcrumbs="[
+                ['label' => 'Change requests', 'href' => route('admin.change-requests.index')],
+                ['label' => $changeRequest->booking->booking_ref],
+            ]" />
     </x-slot>
-    <div class="py-8 max-w-3xl mx-auto sm:px-6 lg:px-8">
-        <livewire:admin.change-requests.change-request-form :ulid="$changeRequest->ulid" />
+
+    <div class="py-8">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-flash />
+            <livewire:admin.change-requests.change-request-form :ulid="$changeRequest->ulid" />
+        </div>
     </div>
 </x-app-layout>

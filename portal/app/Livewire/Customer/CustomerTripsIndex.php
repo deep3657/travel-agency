@@ -8,9 +8,11 @@ use App\Models\Trip;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('customer.layouts.app')]
 class CustomerTripsIndex extends Component
 {
     use WithPagination;

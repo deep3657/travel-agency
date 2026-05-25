@@ -1,60 +1,60 @@
 <div>
-    <div class="bg-white shadow-sm rounded-lg">
-        <div class="p-4 border-b flex flex-wrap gap-3 items-center">
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search enquiries..."
-                class="border border-gray-300 rounded-md px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <select wire:model.live="filterStatus" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                <option value="all">All Statuses</option>
+    <div class="mt-card">
+        <div class="mt-card-header flex-wrap gap-3">
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search enquiries..." class="mt-input w-64">
+            <select wire:model.live="filterStatus" class="mt-select w-auto">
+                <option value="all">All statuses</option>
                 <option value="new">New</option>
-                <option value="in_progress">In Progress</option>
+                <option value="in_progress">In progress</option>
                 <option value="quoted">Quoted</option>
                 <option value="closed">Closed</option>
             </select>
-            <select wire:model.live="filterAssigned" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                <option value="all">All Agents</option>
-                <option value="mine">My Enquiries</option>
+            <select wire:model.live="filterAssigned" class="mt-select w-auto">
+                <option value="all">All agents</option>
+                <option value="mine">My enquiries</option>
                 <option value="unassigned">Unassigned</option>
             </select>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+            <table class="mt-table">
+                <thead>
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Destination</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigned</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                        <th class="px-4 py-3"></th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                        <th>Assigned</th>
+                        <th>Date</th>
+                        <th class="text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-100">
+                <tbody>
                     @forelse($this->enquiries as $enq)
                         <tr>
-                            <td class="px-4 py-3 font-medium text-gray-900">{{ $enq->customer->name }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ ucfirst($enq->enquiry_type) }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ $enq->destination ?? '—' }}</td>
-                            <td class="px-4 py-3">
-                                <span class="inline-flex px-2 py-0.5 rounded text-xs font-medium
-                                    {{ $enq->status === 'new' ? 'bg-blue-100 text-blue-800' :
-                                       ($enq->status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
-                                       ($enq->status === 'quoted' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-600')) }}">
-                                    {{ str_replace('_', ' ', ucfirst($enq->status)) }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ $enq->assignedUser?->name ?? '—' }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-500">{{ $enq->created_at->format('d M Y') }}</td>
-                            <td class="px-4 py-3 text-right">
-                                <a href="{{ route('admin.enquiries.show', $enq->ulid) }}" class="text-blue-600 hover:text-blue-800 text-sm">View</a>
+                            <td class="font-medium text-ink-900">{{ $enq->customer->name }}</td>
+                            <td>{{ ucfirst($enq->enquiry_type) }}</td>
+                            <td>{{ $enq->destination ?? '—' }}</td>
+                            <td><x-status-pill :status="$enq->status" /></td>
+                            <td>{{ $enq->assignedUser?->name ?? '—' }}</td>
+                            <td class="text-ink-500">{{ $enq->created_at->format('d M Y') }}</td>
+                            <td class="text-right">
+                                <div class="inline-flex items-center gap-3">
+                                    @if ($enq->converted_to_trip_id)
+                                        <span class="inline-flex items-center gap-1 text-xs text-emerald-700 font-medium">
+                                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                            Converted
+                                        </span>
+                                    @endif
+                                    <a href="{{ route('admin.enquiries.show', $enq->ulid) }}" class="text-brand-700 hover:text-brand-800 hover:underline text-sm font-medium">View</a>
+                                </div>
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">No enquiries found.</td></tr>
+                        <tr><td colspan="7" class="text-center text-ink-400 py-8">No enquiries found.</td></tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        <div class="px-4 py-3 border-t">{{ $this->enquiries->links() }}</div>
+        <div class="px-4 py-3 border-t border-ink-200/70">{{ $this->enquiries->links() }}</div>
     </div>
 </div>

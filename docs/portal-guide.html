@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Maruti Travels Portal — Operator Guide</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 18mm 24mm 18mm;
+    @bottom-center {
+      content: "Maruti Travels Portal — Operator Guide   ·   Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', sans-serif;
+      font-size: 9pt;
+      color: #6b7280;
+    }
+  }
+
+  :root {
+    --brand-900: #0f1f4a;
+    --brand-800: #142a63;
+    --brand-700: #1d3a8a;
+    --brand-600: #2754b8;
+    --brand-200: #d6e0ff;
+    --brand-100: #eaf0ff;
+    --brand-50:  #f4f7ff;
+    --ink-900: #0f172a;
+    --ink-800: #1e293b;
+    --ink-700: #334155;
+    --ink-600: #475569;
+    --ink-500: #64748b;
+    --ink-400: #94a3b8;
+    --ink-300: #cbd5e1;
+    --ink-200: #e2e8f0;
+    --ink-100: #f1f5f9;
+    --ink-50:  #f8fafc;
+    --accent:  #d97706;
+    --good:    #047857;
+    --warn:    #b45309;
+    --bad:     #b91c1c;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: var(--ink-800);
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--brand-900);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 1.4em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+  }
+  h1 { font-size: 26pt; }
+  h2 { font-size: 17pt; border-bottom: 2px solid var(--brand-200); padding-bottom: 0.25em; }
+  h3 { font-size: 13pt; color: var(--brand-700); }
+  h4 { font-size: 11pt; color: var(--ink-900); margin-top: 1em; margin-bottom: 0.3em; }
+
+  p { margin: 0.4em 0 0.7em; }
+
+  a { color: var(--brand-700); text-decoration: none; }
+
+  ul, ol { margin: 0.3em 0 0.9em; padding-left: 1.4em; }
+  li { margin: 0.18em 0; }
+  li > p { margin: 0.2em 0; }
+
+  strong { color: var(--ink-900); }
+
+  code, kbd, .mono {
+    font-family: 'JetBrains Mono', Menlo, Consolas, monospace;
+    font-size: 9.5pt;
+  }
+  code {
+    background: var(--ink-100);
+    color: var(--brand-800);
+    padding: 0.5px 5px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #0b1437;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-size: 9pt;
+    line-height: 1.45;
+    margin: 0.5em 0 1em;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6em 0 1.2em;
+    font-size: 10pt;
+  }
+  th, td {
+    text-align: left;
+    padding: 7px 9px;
+    border-bottom: 1px solid var(--ink-200);
+    vertical-align: top;
+  }
+  th {
+    background: var(--brand-50);
+    color: var(--brand-800);
+    font-weight: 600;
+    border-bottom: 2px solid var(--brand-200);
+  }
+  tr:nth-child(even) td { background: #fcfdff; }
+
+  blockquote {
+    border-left: 3px solid var(--brand-600);
+    background: var(--brand-50);
+    margin: 0.6em 0;
+    padding: 0.6em 1em;
+    color: var(--ink-700);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .callout {
+    margin: 0.8em 0 1em;
+    padding: 0.8em 1em 0.8em 2.4em;
+    border-radius: 8px;
+    position: relative;
+    page-break-inside: avoid;
+  }
+  .callout::before {
+    position: absolute;
+    left: 0.9em;
+    top: 0.85em;
+    font-weight: 700;
+    font-size: 11pt;
+  }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.tip      { background: #ecfdf5; border: 1px solid #bbf7d0; color: #065f46; }
+  .callout.tip::before    { content: "✓"; color: var(--good); }
+  .callout.warn     { background: #fffbeb; border: 1px solid #fde68a; color: #78350f; }
+  .callout.warn::before   { content: "!"; color: var(--warn); }
+  .callout.info     { background: var(--brand-50); border: 1px solid var(--brand-200); color: var(--brand-800); }
+  .callout.info::before   { content: "i"; color: var(--brand-700); font-style: italic; }
+  .callout.danger   { background: #fef2f2; border: 1px solid #fecaca; color: #7f1d1d; }
+  .callout.danger::before { content: "✕"; color: var(--bad); }
+
+  /* Cover page */
+  .cover {
+    page-break-after: always;
+    height: 245mm;
+    background: linear-gradient(160deg, var(--brand-900) 0%, var(--brand-700) 55%, var(--brand-600) 100%);
+    color: white;
+    margin: -22mm -18mm 0 -18mm;
+    padding: 50mm 22mm 30mm;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: "";
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: "";
+    position: absolute;
+    bottom: -160px; left: -80px;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(217,119,6,0.35) 0%, rgba(217,119,6,0) 70%);
+    border-radius: 50%;
+  }
+  .cover .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 10pt;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1em;
+  }
+  .cover h1 {
+    font-size: 40pt;
+    color: white;
+    margin: 0 0 0.15em;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .cover .subtitle {
+    font-size: 14pt;
+    color: rgba(255,255,255,0.85);
+    max-width: 480px;
+    line-height: 1.4;
+    margin-bottom: 2em;
+  }
+  .cover .meta {
+    position: absolute;
+    bottom: 40mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    gap: 28px;
+    color: rgba(255,255,255,0.85);
+    font-size: 10pt;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    padding-top: 1em;
+  }
+  .cover .meta .label {
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 8pt;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cover .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 9pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+  }
+
+  .toc {
+    page-break-after: always;
+  }
+  .toc h2 { border: none; padding: 0; margin-top: 0; }
+  .toc ol {
+    counter-reset: toc-section;
+    list-style: none;
+    padding-left: 0;
+  }
+  .toc ol li {
+    counter-increment: toc-section;
+    padding: 0.3em 0;
+    border-bottom: 1px dotted var(--ink-200);
+    font-size: 11pt;
+    color: var(--ink-700);
+  }
+  .toc ol li::before {
+    content: counter(toc-section, decimal-leading-zero) "  ";
+    color: var(--brand-600);
+    font-weight: 700;
+    margin-right: 0.5em;
+  }
+  .toc .page-num {
+    float: right;
+    color: var(--ink-400);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .section-divider {
+    page-break-before: always;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    vertical-align: middle;
+  }
+  .pill.role-admin { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+  .pill.role-agent { background: var(--brand-100); color: var(--brand-800); border-color: var(--brand-200); }
+  .pill.role-customer { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+  .pill.v1 { background: #ede9fe; color: #5b21b6; border-color: #ddd6fe; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 0.6em 0 1em;
+  }
+  .feature-grid .card {
+    border: 1px solid var(--ink-200);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: white;
+    page-break-inside: avoid;
+  }
+  .feature-grid .card h4 {
+    margin: 0 0 0.3em;
+    color: var(--brand-800);
+    font-size: 10.5pt;
+  }
+  .feature-grid .card p { margin: 0; font-size: 9.5pt; color: var(--ink-700); }
+
+  .kbd {
+    display: inline-block;
+    background: var(--ink-100);
+    border: 1px solid var(--ink-300);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', Menlo, monospace;
+    font-size: 9pt;
+    color: var(--ink-700);
+  }
+
+  .faq-q {
+    color: var(--brand-800);
+    font-weight: 600;
+    margin-top: 1.2em;
+    margin-bottom: 0.2em;
+    padding-left: 24px;
+    position: relative;
+    font-size: 11pt;
+  }
+  .faq-q::before {
+    content: "Q";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--brand-700);
+    color: white;
+    text-align: center;
+    font-size: 9pt;
+    line-height: 20px;
+    font-weight: 700;
+  }
+  .faq-a {
+    color: var(--ink-700);
+    padding-left: 24px;
+    position: relative;
+    margin-bottom: 0.6em;
+  }
+  .faq-a::before {
+    content: "A";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--ink-100);
+    color: var(--brand-800);
+    text-align: center;
+    font-size: 9pt;
+    line-height: 20px;
+    font-weight: 700;
+  }
+
+  .anchor-section { page-break-inside: auto; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--ink-200);
+    margin: 1.5em 0;
+  }
+
+  .small { font-size: 9pt; color: var(--ink-500); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================== -->
+<!-- COVER                                                          -->
+<!-- ============================================================== -->
+<section class="cover">
+  <div class="badge">Internal &amp; Customer Portal</div>
+  <div class="eyebrow">Operator Guide · v1</div>
+  <h1>Maruti Travels<br/>Portal</h1>
+  <p class="subtitle">Everything your team needs to run enquiries, quotations, bookings, vouchers and customer self-service from a single Laravel application.</p>
+
+  <div class="meta">
+    <div>
+      <span class="label">Document</span>
+      Operator &amp; Setup Guide
+    </div>
+    <div>
+      <span class="label">Version</span>
+      1.0
+    </div>
+    <div>
+      <span class="label">Audience</span>
+      Admins, Agents, Operators
+    </div>
+    <div>
+      <span class="label">Last updated</span>
+      May 2026
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- TOC                                                            -->
+<!-- ============================================================== -->
+<section class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li>About this portal</li>
+    <li>Who uses what — roles &amp; access</li>
+    <li>Feature reference</li>
+    <li>Customer-facing portal</li>
+    <li>Documents &amp; PDF generation</li>
+    <li>Reminders &amp; notifications</li>
+    <li>Reports &amp; dashboards</li>
+    <li>Setup &amp; configuration</li>
+    <li>Production checklist</li>
+    <li>Maintenance, backups &amp; troubleshooting</li>
+    <li>Frequently asked questions</li>
+    <li>Glossary</li>
+  </ol>
+  <p class="small">Cross-references in this document use the section numbers above. The PRD and the project README remain the source of truth for engineering-level detail.</p>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 1. ABOUT                                                       -->
+<!-- ============================================================== -->
+<section>
+  <h2>1. About this portal</h2>
+
+  <p>The <strong>Maruti Travels Portal</strong> is a single Laravel application that replaces the spreadsheet + WhatsApp + email workflow that travel agencies typically run on. It is split into two surfaces:</p>
+
+  <ul>
+    <li><strong>Admin portal</strong> — used by the agency's owner, managers and operations agents to run the full enquiry → quotation → booking → voucher → cancellation lifecycle.</li>
+    <li><strong>Customer-facing site</strong> — a lightweight public website with package browsing, sign-up, and a private "My account" area where customers can raise enquiries and download their own vouchers.</li>
+  </ul>
+
+  <div class="callout info">
+    <p><strong>What problem does it solve?</strong> One source of truth for customer history, GSTIN, bookings and payments; standardised branded PDFs; per-booking cost/profit capture visible only to admins; a reminder engine for travel events and payment dues; and a customer self-service surface that replaces ad-hoc PDF email threads.</p>
+  </div>
+
+  <h3>1.1 At a glance</h3>
+  <div class="feature-grid">
+    <div class="card"><h4>Enquiry inbox</h4><p>Triage, assign, reply with templates, convert to a trip in one click.</p></div>
+    <div class="card"><h4>Trip container</h4><p>Groups all quotations, bookings and cancellations for one customer journey.</p></div>
+    <div class="card"><h4>Versioned quotations</h4><p>Multi-line, GST-aware (CGST/SGST/IGST), with branded PDF output.</p></div>
+    <div class="card"><h4>Bookings &amp; passengers</h4><p>One booking per service (flight / hotel / package); multi-pax support.</p></div>
+    <div class="card"><h4>Branded vouchers</h4><p>Drop-and-create voucher PDFs with version retention.</p></div>
+    <div class="card"><h4>Supplier doc &amp; AI extraction</h4><p>Upload supplier-issued PDFs; Gemini / OpenAI extract fields for review.</p></div>
+    <div class="card"><h4>Cancellation engine</h4><p>Refund accounting, agency fee, vendor fee, net to customer.</p></div>
+    <div class="card"><h4>Reminders &amp; bell</h4><p>Web check-in, travel start, payment due reminders — in-app + email.</p></div>
+    <div class="card"><h4>Admin reports</h4><p>Sales &amp; profit, bookings register, pending payments, Excel export.</p></div>
+    <div class="card"><h4>Customer self-service</h4><p>Sign-up, browse packages, raise enquiries, view trips, download vouchers.</p></div>
+  </div>
+
+  <h3>1.2 Tech stack</h3>
+  <table>
+    <thead><tr><th>Layer</th><th>Choice</th></tr></thead>
+    <tbody>
+      <tr><td>Backend</td><td>PHP 8.2+, Laravel 11</td></tr>
+      <tr><td>UI</td><td>Blade + Livewire 3 + Alpine.js (bundled with Livewire — do <em>not</em> import a second Alpine)</td></tr>
+      <tr><td>Database</td><td>MySQL 8</td></tr>
+      <tr><td>Auth</td><td>Laravel Breeze (email + password + verification), separate <code>web</code> and <code>customer</code> guards</td></tr>
+      <tr><td>RBAC</td><td><code>spatie/laravel-permission</code></td></tr>
+      <tr><td>Audit log</td><td><code>spatie/laravel-activitylog</code> on Bookings, Quotations, Change Requests, Supplier Documents</td></tr>
+      <tr><td>PDF</td><td><code>barryvdh/laravel-snappy</code> (wkhtmltopdf) primary; <code>barryvdh/laravel-dompdf</code> fallback</td></tr>
+      <tr><td>Excel / CSV</td><td><code>maatwebsite/excel</code></td></tr>
+      <tr><td>AI vision</td><td>Google Gemini 2.0 Flash (primary), OpenAI GPT-4o-mini (fallback) — used only for supplier-doc extraction</td></tr>
+      <tr><td>Mail</td><td>SMTP via Brevo / Sendinblue in production; file log driver in local dev</td></tr>
+      <tr><td>Queue</td><td>Laravel queue (database driver) + supervisor for workers</td></tr>
+      <tr><td>Scheduler</td><td><code>php artisan schedule:run</code> via cron (every minute)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 2. ROLES                                                       -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>2. Who uses what — roles &amp; access</h2>
+
+  <p>Authorisation is enforced through Laravel policies. Sensitive financial fields (purchase cost, vendor name on documents, margin) are stripped at the controller and view layers — never just hidden via CSS.</p>
+
+  <table>
+    <thead>
+      <tr><th>Role</th><th>Can see</th><th>Cannot see</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill role-admin">Admin</span></td>
+        <td>Everything — purchase cost, vendor names, margin %, vendor master, Sales &amp; Profit report, AI cost log, settings, audit history.</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="pill role-agent">Agent</span></td>
+        <td>Customers, enquiries, trips, quotations (sale only), bookings (sale only), vouchers, cancellations, reminders, supplier docs.</td>
+        <td>Purchase cost &amp; margin; vendor master CRUD; Sales &amp; Profit report; audit history tabs.</td>
+      </tr>
+      <tr>
+        <td><span class="pill role-customer">Customer</span></td>
+        <td>Own profile, own enquiries, own trips, own bookings, own vouchers; public packages.</td>
+        <td>Any other customer's data, all internal financial fields, supplier-issued documents.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2.1 Default demo accounts (seeded locally)</h3>
+  <table>
+    <thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead>
+    <tbody>
+      <tr><td>Admin</td><td><code>admin@maruti.test</code></td><td><code>password</code></td></tr>
+      <tr><td>Agent</td><td><code>agent@maruti.test</code></td><td><code>password</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <p><strong>Production:</strong> change both passwords immediately after first login, or delete these accounts and create real users from <code>/admin/users</code>. Demo accounts ship only in local seeders.</p>
+  </div>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 3. FEATURE REFERENCE                                           -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>3. Feature reference</h2>
+
+  <!-- 3.1 CUSTOMERS -->
+  <h3>3.1 Customer master</h3>
+  <p>The address book of the agency. Customers enter the system in three ways:</p>
+  <ul>
+    <li>Self-signup via the public website (<code>/customer/register</code>).</li>
+    <li>Admin manual creation from <code>/admin/customers/create</code>.</li>
+    <li>Auto-creation when an enquiry is submitted (matched by email + phone).</li>
+  </ul>
+  <p><strong>Searchable by</strong> name, phone, email, GSTIN. The detail page has tabs for Profile, Enquiries, Trips, Bookings, Documents, Upcoming travels, Payments.</p>
+  <p><strong>Validation:</strong> phone &amp; email are unique; GSTIN is regex-validated (15 chars, standard pattern); PAN is optional but regex-validated when present.</p>
+
+  <!-- 3.2 VENDORS -->
+  <h3>3.2 Vendor master <span class="pill role-admin">Admin only</span></h3>
+  <p>Suppliers used as the FK on bookings — airlines, hotel chains, B2B portals (Tripjack, TBO, MakeMyTrip B2B, IRCTC). Agents see vendor names only on bookings they have access to; they cannot list, edit, or delete vendors. Useful aggregations like "top 10 vendors by purchase value" feed the admin dashboard.</p>
+
+  <!-- 3.3 PACKAGES -->
+  <h3>3.3 Standard packages</h3>
+  <p>Admin-curated tour packages with rich content for the public site:</p>
+  <ul>
+    <li>Title, slug, destinations, duration (days/nights), price-from, departure city.</li>
+    <li>Hero image + gallery (up to 10 images).</li>
+    <li>Short + long description, highlights, inclusions, exclusions, T&amp;Cs.</li>
+    <li>Day-wise itinerary (day number, title, description, optional image).</li>
+    <li>Category tags (Honeymoon / Family / Adventure / Pilgrimage / International / Beach / Hill).</li>
+    <li>Workflow status: Draft / Published / Archived. Only Published packages appear on the public site.</li>
+  </ul>
+  <p>Public list view has filters by category, destination, duration band and price band. The detail page has a "Send enquiry" CTA that pre-fills the enquiry form with the package reference.</p>
+
+  <!-- 3.4 ENQUIRIES -->
+  <h3>3.4 Enquiries</h3>
+  <p>The agency's pipeline of demand. Stored fields include enquiry type (Flight / Hotel / Package / Mixed), travel dates, origin, destination, pax counts (adults/children/infants), budget range, special requirements, source (Website / Walk-in / Phone / Referral / WhatsApp / Other), status, assigned agent and a notes timeline.</p>
+
+  <h4>Lifecycle</h4>
+  <pre><code>New → In Progress → Quoted → Converted (linked to a Trip) / Lost / Cancelled</code></pre>
+
+  <h4>Admin inbox</h4>
+  <ul>
+    <li>Filters: status, agent, date range, type.</li>
+    <li>Bulk-assign, status pipeline view.</li>
+    <li>One-click "Send template reply" using saved <strong>Reply Templates</strong> (rich text + placeholders), logged in the notes timeline.</li>
+    <li><strong>Convert to Trip</strong> action in the sidebar of any enquiry detail page — creates a Trip with the customer, destination, dates and notes carried over, and bumps the enquiry to <em>In Progress</em>.</li>
+  </ul>
+
+  <h4>Customer side</h4>
+  <p>The enquiry form is available from every package detail page and from "My account → Enquiries". When the customer is logged in, name and phone are taken from their profile — they aren't asked again.</p>
+
+  <!-- 3.5 TRIPS -->
+  <h3>3.5 Trips</h3>
+  <p>A <strong>Trip</strong> is a container that groups all the artefacts of one customer journey: every quotation version, every booking (flight/hotel/package), every cancellation, every voucher, every reminder.</p>
+  <p>Two ways to create a Trip:</p>
+  <ol>
+    <li><strong>Convert from enquiry</strong> — the recommended path. Carries over customer, destination, dates, notes and the assigned agent.</li>
+    <li><strong>Direct creation</strong> at <code>/admin/trips/create</code>. Useful when the customer already exists and the conversation started outside the portal.</li>
+  </ol>
+  <p>The trip detail page aggregates all sub-artefacts and shows a running payment-status summary.</p>
+
+  <!-- 3.6 QUOTATIONS -->
+  <h3>3.6 Quotations &amp; quotation editor</h3>
+  <p>Quotations are <strong>versioned</strong> — once a version is sent it becomes immutable; edits create a new version (v1, v2, v3…). Every version is downloadable from history.</p>
+  <ul>
+    <li>Multi-line items, one per service (flight / hotel / package / other).</li>
+    <li>Type-specific structured fields per line (sectors, hotel name, room type, package ref, etc.).</li>
+    <li><strong>Admin-only fields per line:</strong> vendor, purchase cost, margin (auto-calculated as sale − cost). Hidden from agents and absent from the PDF.</li>
+    <li><strong>GST auto-calc</strong>: same state as agency → CGST + SGST; different state → IGST. Rates configured per service type in <em>Agency settings</em>.</li>
+    <li>Totals: subtotal, discount (₹ or %), GST, grand total.</li>
+    <li>Actions: <em>Save draft</em>, <em>Generate PDF</em>, <em>Email to customer</em>, <em>Mark accepted</em> (transitions the trip to Confirmed).</li>
+    <li><span class="pill role-admin">Admin</span> History tab on the quotation detail page shows field-level diffs for every change (user, timestamp, field, old → new).</li>
+  </ul>
+
+  <!-- 3.7 BOOKINGS -->
+  <h3>3.7 Bookings &amp; passengers</h3>
+  <p>One <strong>Booking</strong> per service unit. A trip with flight + hotel + package = three bookings.</p>
+  <p><strong>Common fields:</strong> trip ref, customer, booking type, system reference (auto-generated, e.g. <code>BK-2026-00001</code>), agency PNR, supplier/vendor + vendor PNR/voucher number, sale amount, purchase cost <span class="pill role-admin">Admin only</span>, margin <span class="pill role-admin">Admin only</span>, payment status (Unpaid / Partial / Paid), customer &amp; vendor payment due dates, status (Pending Confirmation / Confirmed / Cancelled / Completed).</p>
+  <p><strong>Passengers</strong> are linked many-to-many. Per-pax fields include title, name, DOB, nationality, passport (international), meal preference and a lead-passenger flag. A "copy passengers from another booking in this trip" helper avoids re-keying.</p>
+  <p><strong>Voucher generation</strong>: one click renders the right voucher PDF and stores it against the booking. Regeneration is <em>"drop and create"</em> — a new version is written; previous versions remain visible in the Documents tab.</p>
+
+  <!-- 3.8 SUPPLIER DOCS + AI -->
+  <h3>3.8 Supplier documents &amp; AI extraction</h3>
+  <p>When the agency books offline on a supplier portal (Tripjack, TBO, IRCTC…), the supplier issues its own PDF. This module lets admins (a) attach the supplier file to a booking for audit, and (b) re-issue the booking as a Maruti Travels branded voucher.</p>
+
+  <h4>Two entry points</h4>
+  <ol>
+    <li><strong>Standalone</strong> — <code>/admin/supplier-docs/new</code>. Upload → pick customer + trip → choose extraction mode → review form → save. Use when the booking doesn't exist yet in the portal.</li>
+    <li><strong>From a booking</strong> — "Upload supplier document" action on the booking detail page. Use when the booking already exists.</li>
+  </ol>
+
+  <h4>Two extraction modes</h4>
+  <table>
+    <thead><tr><th>Mode</th><th>How it works</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td>Manual</td><td>Admin keys booking fields by hand. The supplier PDF is stored for audit with SHA-256 hash and uploader info.</td><td>Free; always available.</td></tr>
+      <tr><td>AI-assisted</td><td>A queued job sends the file to the configured vision model (Gemini 2.0 Flash → fallback to GPT-4o-mini). The model returns structured JSON with per-field confidence scores; fields below the configurable threshold (default 0.7) are highlighted in red. <strong>Admin must Save</strong>; nothing auto-persists.</td><td>~₹0.03–0.10 per document.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <p><strong>Budget cap:</strong> a monthly cap (default ₹300) auto-disables AI mode for Agents on breach (redirects them to Manual). Admins see a warning with an explicit <em>Override and use AI anyway</em> button — every override is audit-logged. The cap resets at the start of each calendar month (server timezone).</p>
+  </div>
+
+  <!-- 3.9 CANCELLATIONS -->
+  <h3>3.9 Cancellation &amp; change requests</h3>
+  <p>Linked one-to-many to bookings. Fields include request type (Cancellation / Flight Change / Hotel Change), reason, status, assigned agent, notes timeline and a refund accounting block:</p>
+  <ul>
+    <li>Vendor cancellation/change fee</li>
+    <li>Refund amount from vendor to agency</li>
+    <li>Agency service fee</li>
+    <li><strong>Net refund to customer</strong> (auto-derived)</li>
+    <li>Refund mode (Cash / Bank transfer / Adjustment) and refund-settled date.</li>
+  </ul>
+  <p>On completion: the parent booking status flips to Cancelled (or the voucher is regenerated for Change), and a template-based summary email goes to the customer.</p>
+
+  <!-- 3.10 AUDIT LOG -->
+  <h3>3.10 Audit log <span class="pill role-admin">Admin only</span></h3>
+  <p>Field-level activity log is enabled on Bookings, Passengers, Quotations, Quotation Versions, Quotation Lines, Cancellation/Change Requests, and Supplier Document uploads. Every create / update / delete is captured with acting user, timestamp and a field-level diff (old → new). The History tab is visible to Admin only and there is <em>no</em> UI to delete or edit log entries.</p>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 4. CUSTOMER PORTAL                                             -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>4. Customer-facing portal</h2>
+
+  <p>The public site lives under <code>/</code> (home), <code>/packages</code>, <code>/about</code> and <code>/contact</code>. The customer-authenticated area lives under <code>/account/*</code> behind a separate <code>customer</code> auth guard.</p>
+
+  <h3>4.1 Public pages</h3>
+  <ul>
+    <li><strong>Home</strong> — hero + featured packages.</li>
+    <li><strong>Packages list</strong> — filters by category, destination, duration, price.</li>
+    <li><strong>Package detail</strong> — gallery, full itinerary, inclusions/exclusions, "Send enquiry" CTA.</li>
+    <li><strong>About / Contact</strong> — static + functional contact form (creates a Customer + Enquiry when submitted; rate-limited).</li>
+  </ul>
+
+  <h3>4.2 Authenticated customer area</h3>
+  <ul>
+    <li><strong>Dashboard</strong> — upcoming trips, recent enquiries.</li>
+    <li><strong>Profile</strong> — edit name, phone, address, GSTIN.</li>
+    <li><strong>My enquiries</strong> — list, detail, add note, raise a new enquiry (form pre-fills name &amp; phone from the session).</li>
+    <li><strong>My trips</strong> — list and detail with bookings, voucher download buttons, and "Request cancellation/change" per booking.</li>
+  </ul>
+
+  <div class="callout danger">
+    <p><strong>Cross-tenant safety:</strong> every customer-area policy method ensures the requester's <code>customer_id</code> matches the resource's. URL tampering (e.g. <code>/account/trips/&lt;other-ulid&gt;</code>) returns HTTP 404. Internal financial fields (purchase cost, vendor name, margin) are stripped from every customer-facing response, even for resources the customer is allowed to read.</p>
+  </div>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 5. DOCUMENTS & PDF                                             -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>5. Documents &amp; PDF generation</h2>
+
+  <p>Five system templates ship with v1:</p>
+  <ol>
+    <li>Quotation</li>
+    <li>Flight Ticket Voucher</li>
+    <li>Hotel Voucher</li>
+    <li>Package Voucher</li>
+    <li>GST Invoice / Receipt</li>
+  </ol>
+
+  <h3>5.1 What's configurable</h3>
+  <ul>
+    <li>Header: logo, agency name, address, GSTIN, phone, email, website.</li>
+    <li>Footer: terms text, signature image.</li>
+    <li>Accent colour (hex).</li>
+    <li>Field-visibility toggles (e.g. hide vendor name on voucher).</li>
+    <li>Email subject &amp; body template per document type, with placeholders (<code>{{customer_name}}</code>, <code>{{booking_ref}}</code>, <code>{{travel_date}}</code>, …).</li>
+  </ul>
+  <p class="small">Free-form WYSIWYG layout editing is intentionally out of v1 — layouts are fixed Blade templates so the rendered PDFs stay consistent and pixel-stable.</p>
+
+  <h3>5.2 Drop-and-create versioning</h3>
+  <p>Regenerating a voucher creates a <em>new</em> stored PDF; the previous version is retained and listed under the booking's Documents tab. This is intentional for audit and historical accuracy when bookings change after issue.</p>
+
+  <h3>5.3 Rendering pipeline</h3>
+  <p>The portal uses <strong>laravel-snappy</strong> (wkhtmltopdf) as the primary renderer because it produces print-stable layouts. <strong>laravel-dompdf</strong> is wired as an automatic fallback for environments where the wkhtmltopdf binary is unavailable. Both points are configured in <code>.env</code>:</p>
+  <pre><code>SNAPPY_PDF_BINARY=/opt/homebrew/bin/wkhtmltopdf
+SNAPPY_IMAGE_BINARY=/opt/homebrew/bin/wkhtmltoimage</code></pre>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 6. REMINDERS                                                   -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>6. Reminders &amp; notifications</h2>
+
+  <p>A daily scheduled job reads upcoming bookings and produces queued notifications. A small bell icon in the admin header shows unread count and the latest 50 reminders.</p>
+
+  <table>
+    <thead><tr><th>Reminder</th><th>Default trigger</th><th>Recipient</th><th>Channels</th></tr></thead>
+    <tbody>
+      <tr><td>Web check-in</td><td>T-48h before flight departure</td><td>Assigned agent</td><td>In-app + email</td></tr>
+      <tr><td>Travel start</td><td>T-1 day before any booking start</td><td>Assigned agent</td><td>In-app + email</td></tr>
+      <tr><td>Reconfirmation</td><td>T-3 days for hotel &amp; package</td><td>Assigned agent</td><td>In-app + email</td></tr>
+      <tr><td>Customer payment due</td><td>T-7, T-3, T-1 days</td><td>Assigned agent</td><td>In-app + email</td></tr>
+      <tr><td>Vendor payment due</td><td>T-7, T-3, T-1 days</td><td>Assigned agent + Admin</td><td>In-app + email</td></tr>
+    </tbody>
+  </table>
+
+  <p>All lead times are configurable in <em>Settings → Reminder lead times</em>. Reminder dedup is built in — the same reminder for the same booking is never sent twice even if the scheduler runs repeatedly.</p>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 7. REPORTS                                                     -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>7. Reports &amp; dashboards</h2>
+
+  <h3>7.1 Admin dashboard</h3>
+  <ul>
+    <li><strong>Counter tiles</strong>: today's enquiries, open quotations, upcoming travels (next 7 days), pending vendor payments, due customer payments. Each is clickable to drill in.</li>
+    <li><strong>Charts</strong> (Admin only): monthly bookings count (last 12 months), monthly revenue trend, service-type mix, top 10 customers by sale, top 10 vendors by purchase.</li>
+  </ul>
+
+  <h3>7.2 Agent dashboard</h3>
+  <p>Same counters but scoped to "my assignments" where relevant. <em>No</em> revenue or profit charts. Includes a "my upcoming follow-ups" panel.</p>
+
+  <h3>7.3 Exportable reports</h3>
+  <p>All reports support CSV / Excel export via <code>maatwebsite/excel</code>.</p>
+  <ul>
+    <li>Bookings register (filters: date range, type, agent, customer)</li>
+    <li><strong>Sales &amp; profit</strong> — Admin only; columns include sale, cost, margin, margin %</li>
+    <li>Enquiry conversion (overall + per-source breakdown)</li>
+    <li>Cancellations report</li>
+    <li>Pending payments — customer</li>
+    <li>Pending payments — vendor</li>
+    <li>Supplier-doc AI extraction log — Admin only; cost rollup &amp; success rate</li>
+  </ul>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 8. SETUP                                                       -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>8. Setup &amp; configuration</h2>
+
+  <p>Local development is fully documented in the project <code>README.md</code>. The setup summary below is non-exhaustive; consult the README for OS-specific (macOS / Windows) step-by-step instructions.</p>
+
+  <h3>8.1 Prerequisites</h3>
+  <ul>
+    <li>PHP 8.2+ with extensions: <code>bcmath</code>, <code>curl</code>, <code>fileinfo</code>, <code>gd</code>, <code>mbstring</code>, <code>openssl</code>, <code>pdo_mysql</code>, <code>zip</code></li>
+    <li>Composer 2.x</li>
+    <li>Node.js 20.x (Vite uses it for the asset pipeline)</li>
+    <li>MySQL 8</li>
+    <li><code>wkhtmltopdf</code> (for primary PDF renderer)</li>
+    <li><code>supervisord</code> (production only — keeps queue workers alive)</li>
+  </ul>
+
+  <h3>8.2 First-time install</h3>
+  <pre><code># Clone the repo, then inside the portal folder:
+cp .env.example .env
+composer install
+npm install
+php artisan key:generate
+php artisan migrate
+php artisan db:seed       # seeds demo admin + agent
+
+php artisan serve         # http://127.0.0.1:8000
+npm run dev               # in a second terminal — Vite dev server
+</code></pre>
+
+  <h3>8.3 Key environment variables</h3>
+  <table>
+    <thead><tr><th>Variable</th><th>Purpose</th><th>Sensible default</th></tr></thead>
+    <tbody>
+      <tr><td><code>APP_NAME</code></td><td>Used in the browser title and email <code>From</code> name.</td><td><code>"Maruti Travels"</code></td></tr>
+      <tr><td><code>APP_ENV</code></td><td><code>local</code> / <code>staging</code> / <code>production</code>.</td><td><code>local</code></td></tr>
+      <tr><td><code>APP_KEY</code></td><td>Encryption key. Generate with <code>php artisan key:generate</code>.</td><td>—</td></tr>
+      <tr><td><code>APP_DEBUG</code></td><td><strong>Must be <code>false</code> in production.</strong> Verbose error pages otherwise.</td><td><code>true</code> locally</td></tr>
+      <tr><td><code>APP_TIMEZONE</code></td><td>Used for scheduling, reminders, log timestamps.</td><td><code>Asia/Kolkata</code></td></tr>
+      <tr><td><code>APP_URL</code></td><td>Canonical base URL. Used in PDF links and emails.</td><td><code>https://portal.maruti.example</code></td></tr>
+      <tr><td><code>DB_*</code></td><td>MySQL host/db/user/password.</td><td>MySQL 8 reachable on <code>127.0.0.1:3306</code></td></tr>
+      <tr><td><code>SESSION_DRIVER</code></td><td><code>database</code> in v1 (table created by migrations).</td><td><code>database</code></td></tr>
+      <tr><td><code>QUEUE_CONNECTION</code></td><td><code>database</code> in v1 — supervisor runs <code>php artisan queue:work</code>.</td><td><code>database</code></td></tr>
+      <tr><td><code>MAIL_*</code></td><td>SMTP creds for Brevo / Sendinblue in production. Local dev uses <code>log</code>.</td><td><code>MAIL_MAILER=log</code> locally</td></tr>
+      <tr><td><code>SNAPPY_PDF_BINARY</code></td><td>Path to the wkhtmltopdf binary. Auto-detected on most distros.</td><td><code>/usr/local/bin/wkhtmltopdf</code></td></tr>
+      <tr><td><code>AI_ENABLED</code></td><td>Master switch for the supplier-doc AI extraction feature.</td><td><code>false</code></td></tr>
+      <tr><td><code>AI_PROVIDER_PRIMARY</code></td><td><code>gemini</code> / <code>openai</code> / <code>claude</code>.</td><td><code>gemini</code></td></tr>
+      <tr><td><code>GEMINI_API_KEY</code> / <code>OPENAI_API_KEY</code></td><td>Provider API keys. <strong>Never committed.</strong></td><td>—</td></tr>
+      <tr><td><code>AI_MONTHLY_CAP_INR</code></td><td>Auto-disables AI mode on breach. Resets monthly.</td><td><code>300</code></td></tr>
+      <tr><td><code>AI_CONFIDENCE_THRESHOLD</code></td><td>Fields below this are highlighted in the review form.</td><td><code>0.7</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>8.4 Configuring AI extraction</h3>
+  <p>The AI vision feature is <strong>off by default</strong>. To enable it:</p>
+  <ol>
+    <li>Obtain a Gemini API key (Google AI Studio) — or an OpenAI key, or both.</li>
+    <li>Set <code>AI_ENABLED=true</code> in <code>.env</code>.</li>
+    <li>Populate <code>GEMINI_API_KEY</code> (recommended primary) and optionally <code>OPENAI_API_KEY</code> as fallback.</li>
+    <li>Set the monthly cap to a value you're comfortable with — typical agencies sit at ₹200–300/month.</li>
+    <li>Restart the queue worker so it picks up the new env: <code>php artisan queue:restart</code>.</li>
+  </ol>
+
+  <h3>8.5 Configuring SMTP (Brevo / Sendinblue)</h3>
+  <ol>
+    <li>Sign up for Brevo (free tier = 300 emails/day; ~₹600/month for 20k transactional).</li>
+    <li>Create an SMTP key and put the credentials in <code>.env</code>:</li>
+  </ol>
+  <pre><code>MAIL_MAILER=smtp
+MAIL_HOST=smtp-relay.brevo.com
+MAIL_PORT=587
+MAIL_ENCRYPTION=tls
+MAIL_USERNAME=your-brevo-login
+MAIL_PASSWORD=your-smtp-key
+MAIL_FROM_ADDRESS=bookings@yourdomain.com
+MAIL_FROM_NAME="${APP_NAME}"</code></pre>
+  <p>Send a test email from <em>Settings → Email diagnostics</em> (or with <code>php artisan tinker</code> → <code>Mail::raw(...)</code>).</p>
+
+  <h3>8.6 Configuring branding</h3>
+  <p>Navigate to <strong>Settings → Agency profile</strong> and upload:</p>
+  <ul>
+    <li>Agency logo (PNG/SVG, transparent background preferred).</li>
+    <li>Letterhead signature image (PNG with transparent background).</li>
+    <li>Accent colour (hex) — used on PDF headers and the email button.</li>
+    <li>Default terms &amp; conditions text — appears on all quotations and invoices.</li>
+  </ul>
+  <p>Then visit <strong>Settings → GST &amp; tax</strong> and set:</p>
+  <ul>
+    <li>Agency GSTIN (15-char regex validated).</li>
+    <li>Agency state (drives CGST+SGST vs IGST split).</li>
+    <li>GST rate per service type (default: 5% packages, 18% commission-based — confirm with your CA).</li>
+  </ul>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 9. PRODUCTION CHECKLIST                                        -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>9. Production checklist</h2>
+
+  <p>Use this list before pointing your DNS at a staging deploy and again before declaring "go-live":</p>
+
+  <h3>9.1 Application</h3>
+  <ul>
+    <li><code>APP_ENV=production</code> and <code>APP_DEBUG=false</code></li>
+    <li><code>APP_KEY</code> set and <strong>backed up</strong> in your secret manager (re-generating it invalidates all encrypted cookies and tokens).</li>
+    <li><code>APP_URL</code> matches the actual HTTPS hostname.</li>
+    <li><code>SESSION_SECURE_COOKIE=true</code>.</li>
+    <li><code>php artisan config:cache</code> &amp; <code>php artisan route:cache</code> &amp; <code>php artisan view:cache</code> after deploy.</li>
+    <li><code>php artisan storage:link</code> if you've enabled public storage (not used by default).</li>
+  </ul>
+
+  <h3>9.2 Hosting &amp; processes</h3>
+  <ul>
+    <li>Web server: Nginx → PHP-FPM 8.2 (Cloudways / Forge handle this automatically).</li>
+    <li><code>wkhtmltopdf</code> installed and the path matches <code>SNAPPY_PDF_BINARY</code>.</li>
+    <li>Cron entry: <code>* * * * * cd /var/www/portal &amp;&amp; php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code></li>
+    <li>Supervisor service for the queue worker: <code>php artisan queue:work --tries=3 --backoff=30 --sleep=2</code></li>
+    <li>HTTPS with auto-renewal (Let's Encrypt). Add HSTS in the reverse-proxy config.</li>
+  </ul>
+
+  <h3>9.3 Security</h3>
+  <ul>
+    <li>Rotate the seeded demo admin password (or delete the demo accounts).</li>
+    <li>Database user has access only to the application database (no <code>SUPER</code>, no other schemas).</li>
+    <li><code>.env</code> permissions: <code>chmod 600</code> and owned by the deploy user.</li>
+    <li>Verify the <code>storage/app/private</code> directory is <em>outside</em> the web root.</li>
+    <li>Smoke-test: try downloading another customer's voucher by manipulating the URL — should return 404.</li>
+  </ul>
+
+  <h3>9.4 Backups</h3>
+  <ul>
+    <li>Provider snapshots enabled (Cloudways &amp; DigitalOcean both offer hourly/daily snapshot windows).</li>
+    <li>Off-server backup of <code>storage/app/private</code> (S3-compatible). Retention: 14 nightly + 12 monthly.</li>
+    <li>Manual restore drill documented and run at least once before go-live.</li>
+  </ul>
+
+  <h3>9.5 First-day checks after going live</h3>
+  <ol>
+    <li>Open the public site at the production URL — packages render and images load.</li>
+    <li>Sign up as a customer with a real email — verification email arrives within a minute.</li>
+    <li>Log into the admin portal and create a Trip end-to-end: enquiry → convert → quotation → PDF → email → booking → voucher.</li>
+    <li>Confirm the queue worker is running: <code>php artisan queue:work --once</code> on the server should pick up jobs.</li>
+    <li>Confirm the scheduler fired today: <code>php artisan schedule:list</code> shows registered tasks.</li>
+  </ol>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 10. MAINTENANCE                                                -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>10. Maintenance, backups &amp; troubleshooting</h2>
+
+  <h3>10.1 Routine maintenance</h3>
+  <ul>
+    <li><strong>Daily</strong>: check the bell-icon reminders inbox; clear obvious "needs follow-up" items.</li>
+    <li><strong>Weekly</strong>: review the pending-payments reports (customer + vendor); review the AI extraction log if AI mode is enabled.</li>
+    <li><strong>Monthly</strong>: review the audit log retention size; rotate any leaked API keys; spot-check a recent backup restore.</li>
+    <li><strong>Quarterly</strong>: run <code>composer update --dry-run</code> and <code>npm audit</code>; apply security updates.</li>
+  </ul>
+
+  <h3>10.2 Common operational tasks</h3>
+  <table>
+    <thead><tr><th>Task</th><th>Command / location</th></tr></thead>
+    <tbody>
+      <tr><td>Reset a user's password</td><td><code>php artisan tinker</code> → <code>User::where('email','…')-&gt;update(['password'=&gt;Hash::make('newpass')])</code></td></tr>
+      <tr><td>Restart the queue worker</td><td><code>php artisan queue:restart</code> (supervisor restarts it)</td></tr>
+      <tr><td>Clear caches after deploy</td><td><code>php artisan optimize:clear &amp;&amp; php artisan config:cache</code></td></tr>
+      <tr><td>Re-run a failed AI extraction</td><td>Open the booking → Supplier docs tab → "Retry"</td></tr>
+      <tr><td>Reset local data to demo state</td><td><code>php artisan migrate:fresh --seed</code></td></tr>
+      <tr><td>Tail the application log</td><td><code>tail -f storage/logs/laravel-$(date +%F).log</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>10.3 Known operational gotchas</h3>
+  <div class="callout warn">
+    <p><strong>Do not import Alpine.js separately.</strong> Livewire 3 bundles its own Alpine. Adding <code>import Alpine from 'alpinejs'; Alpine.start()</code> in <code>resources/js/app.js</code> causes a "Detected multiple instances of Alpine running" error and silently breaks <code>wire:click</code> handlers across the entire admin UI.</p>
+  </div>
+  <div class="callout warn">
+    <p><strong>PHP 8.5 deprecation noise.</strong> Until you upgrade Laravel 11 → 12, <code>PDO::MYSQL_ATTR_SSL_CA</code> emits deprecation warnings under PHP 8.5. These are suppressed in <code>public/index.php</code> for development; do not re-enable verbose deprecation reporting in production until the framework upgrade lands.</p>
+  </div>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 11. FAQ                                                        -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>11. Frequently asked questions</h2>
+
+  <h3>11.1 Roles, accounts &amp; access</h3>
+
+  <p class="faq-q">A new staff member joined — how do I add them?</p>
+  <p class="faq-a">Sign in as Admin → <em>Settings → Users</em> → <em>Invite user</em>. Enter their email and pick a role (Admin or Agent). They receive a verification email with a link to set their own password. You can revoke access from the same screen.</p>
+
+  <p class="faq-q">An agent is asking why they can't see vendor names on bookings — is this a bug?</p>
+  <p class="faq-a">No, it is by design. Agents only see sale prices; purchase cost, vendor, and margin are hidden at the controller and view layers (defence in depth). If a specific agent legitimately needs that visibility, promote them to the Admin role.</p>
+
+  <p class="faq-q">Can a customer accidentally see another customer's trip?</p>
+  <p class="faq-a">No. The <code>customer</code> auth guard plus the <code>TripPolicy</code> enforce that the requesting customer's id must match the trip's <code>customer_id</code>. URL-tampering attempts return HTTP 404. There is automated test coverage for this.</p>
+
+  <p class="faq-q">A customer says they never got their verification email — what now?</p>
+  <p class="faq-a">First, check the SMTP provider's dashboard (Brevo → "Transactional"); 99% of issues are bounced emails or rate-limit throttling. If the email did go out, ask them to check Spam. As a fallback, from the admin user-detail screen click <em>Mark email verified</em>.</p>
+
+  <hr>
+
+  <h3>11.2 Day-to-day workflow</h3>
+
+  <p class="faq-q">A walk-in customer just called — what's the fastest path from call to voucher?</p>
+  <p class="faq-a">
+    1) Open <em>Enquiries → New</em> and capture the request (source = Phone or Walk-in).<br>
+    2) From the enquiry sidebar click <em>Convert to trip</em>.<br>
+    3) On the trip page, <em>Add quotation</em>, fill the line items, hit <em>Generate PDF</em> and <em>Email to customer</em>.<br>
+    4) When the customer accepts, click <em>Mark accepted</em> and create the bookings directly from the line items.<br>
+    5) Generate vouchers from each booking.
+  </p>
+
+  <p class="faq-q">I need to create a Trip but there's no enquiry. Is that possible?</p>
+  <p class="faq-a">Yes. Go to <em>Trips → New trip</em>. Pick the customer (or create one first), then fill name, destination, dates and assign an agent. The trip name auto-suggests <code>Customer · Destination · Month Year</code>; override as you like.</p>
+
+  <p class="faq-q">A customer wants to change their dates — do I create a new booking?</p>
+  <p class="faq-a">No, raise a <em>Change request</em> from the booking detail page. Fill in vendor change fee, agency fee, and any refund/charge to the customer. On completion, the voucher is regenerated automatically (drop-and-create).</p>
+
+  <p class="faq-q">A booking shows the wrong total — how do I correct it without losing the original PDF?</p>
+  <p class="faq-a">Edit the booking; click <em>Regenerate voucher</em>. Drop-and-create keeps the previous PDF version visible in the Documents tab so audit history is intact.</p>
+
+  <p class="faq-q">How do I email a quotation again to the same customer?</p>
+  <p class="faq-a">On the quotation detail page, the <em>Email</em> action is always available. The most recent version (vN) is attached; previous versions remain downloadable from the version dropdown.</p>
+
+  <p class="faq-q">Can two agents work on the same enquiry at once?</p>
+  <p class="faq-a">Yes — there is no hard lock. Livewire reactive updates mean each agent sees the other's saves within seconds. Use the notes timeline to coordinate.</p>
+
+  <p class="faq-q">Where can I see all upcoming travels for next week at once?</p>
+  <p class="faq-a">The admin dashboard tile "Upcoming travels (next 7 days)" is a clickable shortcut. The same data is queryable as a filter on the bookings register report (date range = next 7 days).</p>
+
+  <hr>
+
+  <h3>11.3 Documents &amp; PDFs</h3>
+
+  <p class="faq-q">The voucher PDF shows an old logo — how do I refresh it?</p>
+  <p class="faq-a">Upload the new logo in <em>Settings → Agency profile</em>, then regenerate the voucher. New PDFs use the new logo immediately; previously generated PDFs are <em>not</em> back-rewritten (intentional — those are historical documents).</p>
+
+  <p class="faq-q">The PDF is generating but looks broken — boxes overflow, colours off.</p>
+  <p class="faq-a">Almost always a <code>wkhtmltopdf</code> issue. Check that the binary is installed and <code>SNAPPY_PDF_BINARY</code> in <code>.env</code> points to it. As an emergency fallback, set <code>PDF_FALLBACK=dompdf</code> — dompdf is less pretty but is pure-PHP and always available.</p>
+
+  <p class="faq-q">Can I rearrange the layout of the voucher PDF?</p>
+  <p class="faq-a">Not in v1. Header logo, footer signature, accent colour, and field-visibility toggles are configurable, but the structural Blade template is fixed by design (keeps documents pixel-stable and audit-clean). Full WYSIWYG editing is parked for phase 2.</p>
+
+  <p class="faq-q">Where are PDFs stored?</p>
+  <p class="faq-a"><code>storage/app/private/documents/</code> and <code>storage/app/private/supplier-docs/</code>. Both directories live outside the public web root and are served through authenticated controller routes only. Filenames are server-generated; user-supplied names are <em>never</em> trusted.</p>
+
+  <hr>
+
+  <h3>11.4 AI extraction &amp; supplier documents</h3>
+
+  <p class="faq-q">Is AI extraction free?</p>
+  <p class="faq-a">No, each call costs ~₹0.03–0.10 to the model provider (Gemini 2.0 Flash is the cheapest sensible option). Manual mode is always available at zero cost. A monthly budget cap (default ₹300) auto-disables AI mode for agents on breach.</p>
+
+  <p class="faq-q">An AI extraction returned the wrong airline name — what now?</p>
+  <p class="faq-a">Just edit the field on the review form before saving. Differences between the AI's value and the saved value are logged in the booking's audit trail (provenance is preserved). The supplier file is also stored unchanged, so you can always re-check the source.</p>
+
+  <p class="faq-q">The AI extraction job is stuck on "Processing".</p>
+  <p class="faq-a">Make sure the queue worker is running: <code>php artisan queue:work</code>. The job will time out and surface as "Failed" after a default of 90 seconds — the admin then sees a clear error and can switch to Manual mode without re-uploading.</p>
+
+  <p class="faq-q">Are the supplier PDFs visible to the customer?</p>
+  <p class="faq-a">Never. Customers only see the Maruti Travels branded voucher generated from booking data. Supplier-issued PDFs are stored against the booking for audit and are downloadable by Admin and the assigned Agent only.</p>
+
+  <p class="faq-q">Does AI extraction work on Hindi or mixed-language documents?</p>
+  <p class="faq-a">Gemini 2.0 Flash handles mixed English/Hindi text well for IRCTC and some domestic hotel vouchers. If you see consistent failures on a particular supplier format, raise it — phase 2 plans a template-based parser for the top 3–5 suppliers that's cheaper and faster than per-document LLM calls.</p>
+
+  <hr>
+
+  <h3>11.5 Money, taxes &amp; reports</h3>
+
+  <p class="faq-q">How does the portal decide whether to apply CGST+SGST or IGST?</p>
+  <p class="faq-a">If the customer's billing state matches the <em>Agency state</em> in settings → CGST + SGST. Otherwise → IGST. The split happens automatically per quotation line and per invoice.</p>
+
+  <p class="faq-q">Where do I see margin / profit?</p>
+  <p class="faq-a">On the booking detail page (per-booking) and on the <strong>Sales &amp; profit</strong> report (across bookings). Both are Admin-only. Agents will receive HTTP 403 if they directly call the report endpoint.</p>
+
+  <p class="faq-q">Can I export reports to Excel?</p>
+  <p class="faq-a">Yes — every report has an <em>Export</em> button that returns an <code>.xlsx</code> file via <code>maatwebsite/excel</code>. CSV is also offered for the larger reports.</p>
+
+  <p class="faq-q">A customer paid 50% — how do I record it?</p>
+  <p class="faq-a">On the booking, set <em>Payment status = Partial</em> and add a payment record with the date and method. The pending-payments report will continue to flag the remaining balance until status = Paid.</p>
+
+  <hr>
+
+  <h3>11.6 Setup, errors &amp; troubleshooting</h3>
+
+  <p class="faq-q">I'm seeing <em>"Undefined variable $bookings"</em> or similar runtime errors in the UI.</p>
+  <p class="faq-a">This is a Livewire/Blade mismatch — the view is referencing a variable that the component does not expose. Check the matching component class for the exact computed-property name (e.g. <code>$this->recentBookings</code>) and update the view.</p>
+
+  <p class="faq-q">Clicking a button does nothing — no error, no network call.</p>
+  <p class="faq-a">Check the browser DevTools console. If you see <em>"Detected multiple instances of Alpine running"</em>, an extra Alpine was imported somewhere. Remove the extra import; Livewire 3's bundled Alpine is the only one needed.</p>
+
+  <p class="faq-q">I get <em>"Livewire page component layout view not found: [components.layouts.app]"</em>.</p>
+  <p class="faq-a">Livewire's full-page-component default layout path is different from this project's. Either add <code>#[Layout('layouts.app')]</code> on the component class, or wrap the route in a Blade view that uses <code>&lt;x-app-layout&gt;</code> and embeds <code>&lt;livewire:... /&gt;</code> — the convention used by every other admin route.</p>
+
+  <p class="faq-q">I get an <em>SQLSTATE 42S22: Unknown column 'created_by_id'</em>.</p>
+  <p class="faq-a">A model uses the <code>TracksAuthor</code> trait but its migration didn't add the audit columns. Create an <code>add_tracks_author_to_X_table</code> migration that adds <code>created_by_id</code> and <code>updated_by_id</code> as nullable foreign keys to <code>users</code> (with <code>nullOnDelete</code>) and run <code>php artisan migrate</code>.</p>
+
+  <p class="faq-q">The customer login redirects to the admin login.</p>
+  <p class="faq-a">The <code>verified</code> middleware on the customer area kicks unverified users back to login. In local/dev seed customers with <code>email_verified_at = now()</code> in the register controller (already done in v1). In production, ensure SMTP is configured so verification emails actually arrive.</p>
+
+  <p class="faq-q">My local Vite dev server isn't serving CSS/JS.</p>
+  <p class="faq-a">Two checks: (a) is <code>npm run dev</code> running in a second terminal? (b) does the page have <code>@vite([...])</code> in <code>layouts/app.blade.php</code>? If both are true and styles still don't load, hard-refresh (<span class="kbd">Cmd</span>+<span class="kbd">Shift</span>+<span class="kbd">R</span>) to clear the cached HTML pointing at a stale asset hash.</p>
+
+  <p class="faq-q">My PHP version is older than 8.2 — will the portal run?</p>
+  <p class="faq-a">No. Composer will refuse to install. Upgrade PHP first: <code>brew install php@8.2</code> on macOS or via Chocolatey on Windows (see the project README).</p>
+
+  <p class="faq-q">I want to wipe the local database and start fresh.</p>
+  <p class="faq-a"><code>php artisan migrate:fresh --seed</code>. This drops every table, re-runs migrations, and re-seeds the demo admin/agent. Don't run it in production — there's no <em>"are you sure"</em> beyond the artisan flag.</p>
+
+  <hr>
+
+  <h3>11.7 Data, privacy &amp; audit</h3>
+
+  <p class="faq-q">How long do you keep audit logs?</p>
+  <p class="faq-a">Indefinitely in v1. Activity log rows are immutable from the application (no delete/edit endpoint). Revisit retention if database size becomes a concern — typical agencies sit well under 1 GB after a year.</p>
+
+  <p class="faq-q">Can the audit log be edited or deleted from the UI?</p>
+  <p class="faq-a">No. There is no UI affordance to delete or modify audit entries, and the role policy only grants the <em>view</em> ability to Admin.</p>
+
+  <p class="faq-q">Where are passwords stored?</p>
+  <p class="faq-a">As bcrypt hashes (Laravel default, <code>BCRYPT_ROUNDS=12</code>). Plain-text passwords are never persisted or logged.</p>
+
+  <p class="faq-q">Is the portal GDPR-ready?</p>
+  <p class="faq-a">Not formally certified in v1. The data model and policies are designed to support GDPR primitives (export own data, delete own data) but the user-facing flows for those rights are deferred. Reach out before importing EU-resident customer data at scale.</p>
+</section>
+
+
+<!-- ============================================================== -->
+<!-- 12. GLOSSARY                                                   -->
+<!-- ============================================================== -->
+<section class="section-divider">
+  <h2>12. Glossary</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Trip</td><td>Container grouping all quotations, bookings and cancellations for one customer journey.</td></tr>
+      <tr><td>Quotation</td><td>Priced offer for a trip with one or more line items; versioned and immutable once sent.</td></tr>
+      <tr><td>Booking</td><td>Confirmed unit of service (one flight, one hotel stay, one package) with passenger and vendor data.</td></tr>
+      <tr><td>Voucher</td><td>Customer-facing confirmation document for a booking (flight ticket, hotel voucher, package voucher).</td></tr>
+      <tr><td>Drop and create</td><td>Regenerate a voucher PDF from current booking data, retaining prior versions for history.</td></tr>
+      <tr><td>Supplier document</td><td>Flight ticket or hotel voucher PDF/image issued by a third-party supplier portal (Tripjack, TBO, IRCTC).</td></tr>
+      <tr><td>Extraction job</td><td>Queued task that sends a supplier document to an AI vision provider and stores the structured response for human review.</td></tr>
+      <tr><td>PNR</td><td>Passenger Name Record / supplier booking reference.</td></tr>
+      <tr><td>GSTIN</td><td>15-character Goods and Services Tax Identification Number issued in India.</td></tr>
+      <tr><td>Reminder</td><td>System-scheduled notification (in-app + email) tied to a booking date or payment due date.</td></tr>
+      <tr><td>Change request</td><td>Linked-to-booking record capturing a cancellation or modification with its refund accounting.</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <p class="small">This guide is generated from the project's PRD and README plus a survey of the live codebase. For engineering-level depth (data model ERD, milestone-by-milestone build plan, security primitives), refer to <code>PRD.pdf</code> in the repository root. For OS-specific install steps see <code>README.md</code>.</p>
+</section>
+
+</body>
+</html>

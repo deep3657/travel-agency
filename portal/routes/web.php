@@ -12,12 +12,12 @@ use App\Http\Controllers\PackagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SignedFileController;
 use App\Http\Controllers\StaticController;
-use App\Livewire\Admin\Trips\QuotationEditor;
 use App\Models\Booking;
 use App\Models\ChangeRequest;
 use App\Models\Customer;
 use App\Models\Enquiry;
 use App\Models\Package;
+use App\Models\Quotation;
 use App\Models\Trip;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +35,7 @@ Route::get('/packages', [PackagesController::class, 'index'])->name('packages.in
 Route::get('/packages/{slug}', [PackagesController::class, 'show'])->name('packages.show');
 Route::get('/about', [StaticController::class, 'about'])->name('about');
 Route::get('/contact', [StaticController::class, 'contact'])->name('contact');
+Route::post('/contact', [StaticController::class, 'contactStore'])->middleware('throttle:5,1')->name('contact.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +87,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             return view('admin.trips.show', compact('trip'));
         })->name('trips.show');
-        Route::get('/quotations/{ulid}/editor', QuotationEditor::class)->name('quotations.editor');
+        Route::get('/quotations/{ulid}/editor', function (string $ulid) {
+            $quotation = Quotation::with('trip.customer')->where('ulid', $ulid)->firstOrFail();
+
+            return view('admin.trips.quotation-editor', compact('quotation'));
+        })->name('quotations.editor');
 
         // Bookings (M9)
         Route::get('/bookings', fn () => view('admin.bookings.index'))->name('bookings.index');

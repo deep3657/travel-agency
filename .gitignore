@@ -1,0 +1,10 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local screenshots from manual testing sessions (kept out of history)
+Screenshot*.png
+Screenshot*.jpg
+Screenshot*.jpeg

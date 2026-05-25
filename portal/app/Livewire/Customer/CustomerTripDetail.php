@@ -6,8 +6,10 @@ namespace App\Livewire\Customer;
 
 use App\Models\Trip;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('customer.layouts.app')]
 class CustomerTripDetail extends Component
 {
     public Trip $trip;

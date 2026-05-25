@@ -1,10 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">Enquiries</h2>
+        <x-page-header
+            title="Enquiries"
+            subtitle="Triage, qualify and convert customer interest."
+            :breadcrumbs="[
+                ['label' => 'Enquiries'],
+            ]" />
     </x-slot>
+
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('status'))<div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-800">{{ session('status') }}</div>@endif
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-flash />
             <livewire:admin.enquiries.enquiries-index />
         </div>
     </div>

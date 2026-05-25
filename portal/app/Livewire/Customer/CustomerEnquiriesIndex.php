@@ -8,9 +8,11 @@ use App\Models\Enquiry;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('customer.layouts.app')]
 class CustomerEnquiriesIndex extends Component
 {
     use WithPagination;

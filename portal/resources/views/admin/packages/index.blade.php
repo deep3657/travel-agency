@@ -1,17 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800">Packages</h2>
-            <a href="{{ route('admin.packages.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800">
-                + New Package
-            </a>
-        </div>
+        <x-page-header
+            title="Packages"
+            subtitle="Reusable itineraries you can sell."
+            :breadcrumbs="[
+                ['label' => 'Packages'],
+            ]">
+            @can('create', \App\Models\Package::class)
+                <a href="{{ route('admin.packages.create') }}" class="mt-btn-primary mt-btn-sm">
+                    + Add package
+                </a>
+            @endcan
+        </x-page-header>
     </x-slot>
+
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('status'))
-                <div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-800">{{ session('status') }}</div>
-            @endif
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-flash />
             <livewire:admin.packages.packages-index />
         </div>
     </div>

@@ -6,9 +6,11 @@ namespace App\Livewire\Customer;
 
 use App\Models\Customer;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
+#[Layout('customer.layouts.app')]
 class CustomerProfile extends Component
 {
     public ?Customer $customer = null;

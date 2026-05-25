@@ -1,12 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800">Bookings</h2>
-            <a href="{{ route('admin.bookings.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800">+ New Booking</a>
-        </div>
+        <x-page-header
+            title="Bookings"
+            subtitle="Flights, hotels and packages confirmed with vendors."
+            :breadcrumbs="[
+                ['label' => 'Bookings'],
+            ]">
+            <a href="{{ route('admin.bookings.create') }}" class="mt-btn-primary mt-btn-sm">
+                + New booking
+            </a>
+        </x-page-header>
     </x-slot>
-    <div class="py-8 max-w-7xl mx-auto sm:px-6 lg:px-8">
-        @if(session('status'))<div class="mb-4 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-800">{{ session('status') }}</div>@endif
-        <livewire:admin.bookings.bookings-index />
+
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-flash />
+            <livewire:admin.bookings.bookings-index />
+        </div>
     </div>
 </x-app-layout>

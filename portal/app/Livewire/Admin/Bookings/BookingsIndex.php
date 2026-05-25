@@ -35,6 +35,12 @@ class BookingsIndex extends Component
         $this->resetPage();
     }
 
+    #[Computed]
+    public function showFinancials(): bool
+    {
+        return (bool) auth()->user()?->isAdmin();
+    }
+
     /**
      * @return LengthAwarePaginator<int, Booking>
      */

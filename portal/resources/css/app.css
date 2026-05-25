@@ -1,3 +1,202 @@
+@import url('https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800|fraunces:400,500,600,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* =========================================================
+   Maruti Travels Design System
+   - Tokenised colours (see tailwind.config.js)
+   - Reusable component classes (.mt-btn, .mt-card, .mt-pill ...)
+   ========================================================= */
+
+@layer base {
+    :root {
+        --mt-accent: theme('colors.brand.700');
+        --mt-accent-soft: theme('colors.brand.50');
+    }
+
+    [x-cloak] { display: none !important; }
+
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        @apply text-ink-800 bg-ink-50;
+    }
+
+    h1, h2, h3, h4 {
+        @apply tracking-tight;
+    }
+}
+
+@layer components {
+    /* --- Buttons ---------------------------------------- */
+    .mt-btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold
+               transition-all duration-150 focus-visible:outline-none focus-visible:ring-2
+               focus-visible:ring-offset-2 focus-visible:ring-brand-500 disabled:opacity-50
+               disabled:cursor-not-allowed active:scale-[0.98];
+    }
+    .mt-btn-primary {
+        @apply mt-btn text-white shadow-sm shadow-brand-900/20
+               bg-gradient-to-b from-brand-600 to-brand-800 hover:from-brand-700 hover:to-brand-900;
+    }
+    .mt-btn-accent {
+        @apply mt-btn text-white shadow-sm shadow-accent-700/20
+               bg-gradient-to-b from-accent-400 to-accent-600 hover:from-accent-500 hover:to-accent-700;
+    }
+    .mt-btn-secondary {
+        @apply mt-btn bg-white text-ink-700 border border-ink-200 hover:bg-ink-50 hover:border-ink-300 shadow-sm;
+    }
+    .mt-btn-ghost {
+        @apply mt-btn text-ink-600 hover:text-ink-900 hover:bg-ink-100;
+    }
+    .mt-btn-danger {
+        @apply mt-btn text-white shadow-sm shadow-red-900/20
+               bg-gradient-to-b from-red-500 to-red-700 hover:from-red-600 hover:to-red-800;
+    }
+    .mt-btn-sm {
+        @apply px-3 py-1.5 text-xs;
+    }
+    .mt-btn-lg {
+        @apply px-6 py-3 text-base;
+    }
+
+    /* --- Cards ------------------------------------------ */
+    .mt-card {
+        @apply bg-white rounded-xl border border-ink-200/70 shadow-card;
+    }
+    .mt-card-hover {
+        @apply mt-card transition-all hover:shadow-card-hover hover:-translate-y-0.5 hover:border-ink-300/80;
+    }
+    .mt-card-header {
+        @apply flex items-center justify-between px-5 py-4 border-b border-ink-200/70;
+    }
+    .mt-card-body {
+        @apply p-5;
+    }
+
+    /* --- Form controls ---------------------------------- */
+    .mt-input {
+        @apply w-full rounded-lg border-ink-300 bg-white text-sm text-ink-900 placeholder-ink-400
+               shadow-sm focus:border-brand-500 focus:ring-brand-500;
+    }
+    .mt-textarea {
+        @apply mt-input min-h-[6rem] resize-y;
+    }
+    .mt-select {
+        @apply mt-input pr-10;
+    }
+    .mt-label {
+        @apply block text-sm font-medium text-ink-700 mb-1.5;
+    }
+    .mt-help {
+        @apply mt-1 text-xs text-ink-500;
+    }
+    .mt-error {
+        @apply mt-1 text-xs text-red-600;
+    }
+
+    /* --- Pills / Status badges -------------------------- */
+    .mt-pill {
+        @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full;
+    }
+    .mt-pill-blue   { @apply mt-pill bg-brand-50  text-brand-700; }
+    .mt-pill-green  { @apply mt-pill bg-emerald-50 text-emerald-700; }
+    .mt-pill-amber  { @apply mt-pill bg-amber-50  text-amber-800; }
+    .mt-pill-red    { @apply mt-pill bg-red-50    text-red-700; }
+    .mt-pill-gray   { @apply mt-pill bg-ink-100   text-ink-700; }
+    .mt-pill-violet { @apply mt-pill bg-violet-50 text-violet-700; }
+
+    /* --- Tables ----------------------------------------- */
+    .mt-table {
+        @apply min-w-full divide-y divide-ink-200/80;
+    }
+    .mt-table thead th {
+        @apply px-4 py-3 text-left text-xs font-semibold text-ink-500 uppercase tracking-wide;
+    }
+    .mt-table tbody td {
+        @apply px-4 py-3 text-sm text-ink-700;
+    }
+    .mt-table tbody tr {
+        @apply border-b border-ink-100 last:border-0 hover:bg-ink-50/60;
+    }
+
+    /* --- Page header ------------------------------------ */
+    .mt-page-header {
+        @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3;
+    }
+    .mt-page-title {
+        @apply font-display text-2xl sm:text-3xl font-bold text-ink-900 tracking-tight;
+    }
+    .mt-page-subtitle {
+        @apply text-sm text-ink-500 mt-1;
+    }
+
+    /* --- Sidebar nav ------------------------------------ */
+    .mt-side-link {
+        @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-ink-600
+               hover:bg-ink-100 hover:text-ink-900 transition-colors;
+    }
+    .mt-side-link-active {
+        @apply bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700;
+    }
+    .mt-side-link svg {
+        @apply h-5 w-5 shrink-0;
+    }
+
+    /* --- Empty state ------------------------------------ */
+    .mt-empty {
+        @apply flex flex-col items-center justify-center text-center py-12 px-4;
+    }
+    .mt-empty svg {
+        @apply h-12 w-12 text-ink-300 mb-3;
+    }
+    .mt-empty-title {
+        @apply text-sm font-semibold text-ink-700;
+    }
+    .mt-empty-sub {
+        @apply text-sm text-ink-500 mt-1 max-w-md;
+    }
+
+    /* --- Alerts / Flash --------------------------------- */
+    .mt-alert {
+        @apply flex items-start gap-3 rounded-lg p-3 text-sm;
+    }
+    .mt-alert-success { @apply mt-alert bg-emerald-50 text-emerald-800 border border-emerald-200; }
+    .mt-alert-error   { @apply mt-alert bg-red-50    text-red-800     border border-red-200; }
+    .mt-alert-info    { @apply mt-alert bg-brand-50  text-brand-800   border border-brand-200; }
+    .mt-alert-warn    { @apply mt-alert bg-amber-50  text-amber-800   border border-amber-200; }
+
+    /* --- Stat card -------------------------------------- */
+    .mt-stat {
+        @apply mt-card p-5 flex flex-col gap-2 transition-shadow hover:shadow-card-hover;
+    }
+    .mt-stat-label {
+        @apply text-xs font-medium uppercase tracking-wide text-ink-500;
+    }
+    .mt-stat-value {
+        @apply text-2xl sm:text-3xl font-bold text-ink-900;
+    }
+
+    /* --- Brand mark ------------------------------------- */
+    .mt-brand-mark {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br
+               from-brand-600 to-brand-800 text-white font-bold shadow-sm;
+    }
+}
+
+@layer utilities {
+    .mt-no-scrollbar::-webkit-scrollbar { display: none; }
+    .mt-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .mt-line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}

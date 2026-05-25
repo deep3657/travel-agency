@@ -1,14 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-2 text-sm text-gray-500">
-            <a href="{{ route('admin.vendors.index') }}" class="hover:text-gray-700">Vendors</a>
-            <span>/</span>
-            <span class="font-semibold text-xl text-gray-800">New vendor</span>
-        </div>
+        <x-page-header
+            title="New vendor"
+            :breadcrumbs="[
+                ['label' => 'Vendors', 'href' => route('admin.vendors.index')],
+                ['label' => 'New vendor'],
+            ]" />
     </x-slot>
+
     <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <x-flash />
+            <div class="mt-card mt-card-body">
                 <livewire:admin.vendors.vendor-form />
             </div>
         </div>

@@ -23,7 +23,7 @@ class SupplierDocStandalone extends Component
     #[Validate('required|file|mimes:pdf,png,jpg,jpeg|max:10240')]
     public mixed $file = null;
 
-    #[Validate('required|in:flight,hotel,other')]
+    #[Validate('required|in:flight,hotel,package,other')]
     public string $doc_type = 'flight';
 
     #[Validate('required|in:manual,ai')]
@@ -50,15 +50,35 @@ class SupplierDocStandalone extends Component
 
     public function save(SupplierDocService $service): void
     {
+        // If the temporary upload was cleaned up (e.g. session restart, expired
+        // tmp file), surface a clear error instead of failing silently when the
+        // validator stringifies a missing file into a confusing message.
+        if (! $this->file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+            $this->step = 1;
+            $this->addError('file', 'Please re-select the file — the previous upload session expired.');
+
+            return;
+        }
+
         $this->validate();
 
-        $sd = $service->upload($this->file, [
-            'doc_type' => $this->doc_type,
-            'extraction_mode' => $this->extraction_mode,
-            'supplier_name' => $this->supplier_name,
-            'supplier_vendor_id' => $this->supplier_vendor_id,
-            'booking_id' => $this->booking_id,
-        ], auth()->user());
+        try {
+            $sd = $service->upload($this->file, [
+                'doc_type' => $this->doc_type,
+                'extraction_mode' => $this->extraction_mode,
+                'supplier_name' => $this->supplier_name,
+                'supplier_vendor_id' => $this->supplier_vendor_id,
+                'booking_id' => $this->booking_id,
+            ], auth()->user());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Supplier document upload failed', [
+                'message' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+            $this->addError('file', 'Upload failed: '.$e->getMessage());
+
+            return;
+        }
 
         if ($this->extraction_mode === 'ai') {
             $service->queueExtraction($sd);

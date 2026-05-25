@@ -164,6 +164,21 @@ class BookingForm extends Component
     }
 
     /**
+     * @return Collection<int, Trip>
+     */
+    #[Computed]
+    public function trips(): Collection
+    {
+        return Trip::query()->with('customer')->orderBy('name')->get();
+    }
+
+    #[Computed]
+    public function showFinancials(): bool
+    {
+        return (bool) auth()->user()?->isAdmin();
+    }
+
+    /**
      * @return Collection<int, Passenger>
      */
     #[Computed]

@@ -1,35 +1,55 @@
-<x-public-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12">
-        <div class="bg-white shadow-sm rounded-lg p-8 w-full max-w-md">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Sign In</h1>
-            @if($errors->any())
-                <div class="mb-4 bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-700">
-                    @foreach($errors->all() as $err)<p>{{ $err }}</p>@endforeach
-                </div>
-            @endif
-            @if(session('status'))
-                <div class="mb-4 bg-green-50 border border-green-200 rounded-md p-3 text-sm text-green-700">{{ session('status') }}</div>
-            @endif
-            <form method="POST" action="{{ route('customer.login') }}" class="space-y-4">
-                @csrf
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <input name="email" type="email" value="{{ old('email') }}" required autocomplete="email"
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input name="password" type="password" required autocomplete="current-password"
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center gap-2 text-sm text-gray-600">
-                        <input type="checkbox" name="remember" class="rounded border-gray-300"> Remember me
+<x-public-layout title="Sign in">
+    <div class="min-h-[80vh] flex items-center justify-center bg-ink-50 py-12 px-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-6">
+                <a href="{{ route('home') }}" class="inline-flex">
+                    <x-brand-mark size="lg" />
+                </a>
+            </div>
+
+            <div class="mt-card p-8">
+                <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Welcome back</h1>
+                <p class="text-sm text-ink-500 mb-6">Sign in to access your trips, enquiries and bookings.</p>
+
+                @if($errors->any())
+                    <div class="mt-alert-error mb-4">
+                        <svg class="h-5 w-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4a2 2 0 00-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/></svg>
+                        <div>@foreach($errors->all() as $err)<p>{{ $err }}</p>@endforeach</div>
+                    </div>
+                @endif
+                @if(session('status'))
+                    <div class="mt-alert-success mb-4">
+                        <svg class="h-5 w-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span>{{ session('status') }}</span>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('customer.login') }}" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="mt-label">Email address</label>
+                        <input name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email"
+                            class="mt-input" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <label class="mt-label">Password</label>
+                        <input name="password" type="password" required autocomplete="current-password"
+                            class="mt-input" placeholder="••••••••">
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-ink-600">
+                        <input type="checkbox" name="remember" class="rounded border-ink-300 text-brand-700 focus:ring-brand-500"> Remember me
                     </label>
-                </div>
-                <button type="submit" class="w-full py-2 bg-blue-700 text-white font-medium rounded-md hover:bg-blue-800 transition">Sign In</button>
-            </form>
-            <p class="mt-4 text-center text-sm text-gray-500">New customer? <a href="{{ route('customer.register') }}" class="text-blue-600 hover:underline">Create account</a></p>
+                    <button type="submit" class="mt-btn-primary w-full">Sign in</button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-ink-500">
+                    New here? <a href="{{ route('customer.register') }}" class="text-brand-700 font-medium hover:text-brand-800">Create an account</a>
+                </p>
+            </div>
+
+            <p class="text-center text-xs text-ink-500 mt-6">
+                Maruti Travels staff? <a href="{{ route('login') }}" class="text-brand-700 hover:underline">Sign in to staff portal</a>
+            </p>
         </div>
     </div>
 </x-public-layout>
