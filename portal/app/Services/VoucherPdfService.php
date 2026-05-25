@@ -46,10 +46,19 @@ final class VoucherPdfService
 
         file_put_contents(storage_path('app/private/'.$path), $pdfBytes);
 
+        // "Drop and create" versioning (PRD §5.5): every regeneration increments
+        // the version_number for this (booking, doc_type) pair. Previous
+        // documents are kept and remain downloadable from the admin UI.
+        $nextVersion = (int) Document::query()
+            ->where('booking_id', $b->id)
+            ->where('doc_type', $docType)
+            ->max('version_number') + 1;
+
         return Document::query()->create([
             'ulid' => $ulid,
             'doc_type' => $docType,
             'booking_id' => $b->id,
+            'version_number' => $nextVersion,
             'pdf_path' => $path,
             'size_bytes' => strlen($pdfBytes),
             'generated_by' => $actor->id,

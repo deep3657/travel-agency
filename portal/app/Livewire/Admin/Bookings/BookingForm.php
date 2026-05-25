@@ -6,14 +6,20 @@ namespace App\Livewire\Admin\Bookings;
 
 use App\Models\Booking;
 use App\Models\Passenger;
+use App\Models\SupplierDocument;
 use App\Models\Trip;
 use App\Models\Vendor;
 use App\Services\BookingService;
+use App\Services\VoucherService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Throwable;
 
 class BookingForm extends Component
 {
@@ -81,6 +87,36 @@ class BookingForm extends Component
 
     public ?int $leadPassengerId = null;
 
+    /**
+     * ULID of the SupplierDocument this booking was created from (if any).
+     * Captured from the `?from_supplier_doc={ulid}` query string, threaded
+     * through the form, and used on save to (a) link the doc to the new
+     * booking and (b) auto-generate the standardised Maruti voucher.
+     */
+    #[Url(as: 'from_supplier_doc')]
+    public ?string $fromSupplierDocUlid = null;
+
+    /** Cached SupplierDocument loaded once in mount(); shown in the banner. */
+    public ?int $supplierDocumentId = null;
+
+    public ?string $supplierDocumentFilename = null;
+
+    public ?string $extractionStatus = null;
+
+    public ?string $extractionProvider = null;
+
+    /** @var array<string, float> */
+    public array $extractionConfidence = [];
+
+    /** @var list<string> */
+    public array $lowConfidenceFields = [];
+
+    /**
+     * Confidence threshold below which a field is flagged for human review
+     * (PRD §13 — admins review low-confidence fields before saving).
+     */
+    private const CONFIDENCE_THRESHOLD = 0.7;
+
     public function mount(?string $ulid = null, ?int $tripId = null): void
     {
         if ($ulid !== null) {
@@ -107,10 +143,171 @@ class BookingForm extends Component
         } else {
             abort_unless(auth()->user()?->can('create', Booking::class), 403);
             $this->trip_id = $tripId;
+            $this->applySupplierDocPrefill();
         }
     }
 
-    public function save(BookingService $service): void
+    /**
+     * If the form was opened from the "supplier doc → new booking" wizard,
+     * load the SupplierDocument + its ExtractionJob and prefill the form.
+     * Manual-mode uploads (no extraction job) still work — the admin just
+     * sees an empty form and a banner reminding them to fill it in.
+     */
+    private function applySupplierDocPrefill(): void
+    {
+        if ($this->fromSupplierDocUlid === null || $this->fromSupplierDocUlid === '') {
+            return;
+        }
+
+        $sd = SupplierDocument::query()
+            ->with('extractionJob')
+            ->where('ulid', $this->fromSupplierDocUlid)
+            ->first();
+
+        if ($sd === null) {
+            return;
+        }
+
+        $this->supplierDocumentId = $sd->id;
+        $this->supplierDocumentFilename = $sd->original_filename;
+
+        // Map supplier doc type → booking type. "other" stays on the default
+        // package booking type and the admin can change it.
+        $this->booking_type = match ($sd->doc_type) {
+            'flight' => 'flight',
+            'hotel' => 'hotel',
+            'package' => 'package',
+            default => $this->booking_type,
+        };
+
+        if ($sd->supplier_vendor_id !== null) {
+            $this->vendor_id = $sd->supplier_vendor_id;
+        }
+
+        $extraction = $sd->extractionJob;
+        if ($extraction === null) {
+            // Manual mode — nothing to prefill.
+            return;
+        }
+
+        $this->extractionStatus = $extraction->status;
+        $this->extractionProvider = $extraction->provider;
+
+        if ($extraction->status !== 'completed' || empty($extraction->extracted_json)) {
+            return;
+        }
+
+        /** @var array<string, mixed> $data */
+        $data = $extraction->extracted_json;
+        /** @var array<string, mixed> $rawConf */
+        $rawConf = $extraction->confidence_json ?? [];
+        $this->extractionConfidence = array_filter(
+            array_map(fn ($v) => is_numeric($v) ? (float) $v : null, $rawConf),
+            fn ($v) => $v !== null,
+        );
+
+        $this->lowConfidenceFields = $this->prefillFromExtraction($data, $this->booking_type);
+    }
+
+    /**
+     * Copy AI-extracted values onto the form's typed fields. Returns the list
+     * of public field names whose confidence was below the review threshold.
+     *
+     * @param  array<string, mixed>  $data
+     * @return list<string>
+     */
+    private function prefillFromExtraction(array $data, string $bookingType): array
+    {
+        $lowConfidence = [];
+
+        $pickString = function (string $key) use ($data): ?string {
+            $val = $data[$key] ?? null;
+
+            return is_string($val) && $val !== '' ? $val : null;
+        };
+
+        $pickDate = function (string $key, ?string $format = null) use ($data): ?string {
+            $val = $data[$key] ?? null;
+            if (! is_string($val) || $val === '') {
+                return null;
+            }
+            try {
+                $dt = Carbon::parse($val);
+            } catch (Throwable) {
+                return null;
+            }
+
+            return $format !== null ? $dt->format($format) : $dt->toDateString();
+        };
+
+        $flagLow = function (string $sourceKey, string $publicField) use (&$lowConfidence): void {
+            $confidence = $this->extractionConfidence[$sourceKey] ?? null;
+            if ($confidence !== null && $confidence < self::CONFIDENCE_THRESHOLD) {
+                $lowConfidence[] = $publicField;
+            }
+        };
+
+        if ($bookingType === 'flight') {
+            $this->flight_data = array_merge($this->flight_data, array_filter([
+                'airline' => $pickString('airline'),
+                'flight_no' => $pickString('flight_no'),
+                'origin' => $pickString('origin'),
+                'destination' => $pickString('destination'),
+                'class' => $pickString('class'),
+                'departure_datetime' => $pickDate('departure_datetime', 'Y-m-d\TH:i'),
+                'arrival_datetime' => $pickDate('arrival_datetime', 'Y-m-d\TH:i'),
+            ], fn ($v) => $v !== null));
+
+            foreach ([
+                'airline' => 'flight_data.airline',
+                'flight_no' => 'flight_data.flight_no',
+                'origin' => 'flight_data.origin',
+                'destination' => 'flight_data.destination',
+                'class' => 'flight_data.class',
+                'departure_datetime' => 'flight_data.departure_datetime',
+                'arrival_datetime' => 'flight_data.arrival_datetime',
+            ] as $src => $pub) {
+                $flagLow($src, $pub);
+            }
+
+            $pnr = $pickString('pnr');
+            if ($pnr !== null) {
+                $this->vendor_pnr = $pnr;
+                $flagLow('pnr', 'vendor_pnr');
+            }
+        } elseif ($bookingType === 'hotel') {
+            $this->hotel_data = array_merge($this->hotel_data, array_filter([
+                'hotel_name' => $pickString('hotel_name'),
+                'room_type' => $pickString('room_type'),
+                'check_in' => $pickDate('check_in'),
+                'check_out' => $pickDate('check_out'),
+            ], fn ($v) => $v !== null));
+
+            foreach ([
+                'hotel_name' => 'hotel_data.hotel_name',
+                'room_type' => 'hotel_data.room_type',
+                'check_in' => 'hotel_data.check_in',
+                'check_out' => 'hotel_data.check_out',
+            ] as $src => $pub) {
+                $flagLow($src, $pub);
+            }
+
+            $checkIn = $this->hotel_data['check_in'] ?? null;
+            if (is_string($checkIn) && $checkIn !== '') {
+                $this->customer_payment_due = $checkIn;
+            }
+
+            $conf = $pickString('confirmation_no');
+            if ($conf !== null) {
+                $this->vendor_pnr = $conf;
+                $flagLow('confirmation_no', 'vendor_pnr');
+            }
+        }
+
+        return array_values(array_unique($lowConfidence));
+    }
+
+    public function save(BookingService $service, VoucherService $voucherService): void
     {
         $this->validate();
 
@@ -146,12 +343,44 @@ class BookingForm extends Component
             $service->attachPassengers($booking, $this->passengerIds, $this->leadPassengerId);
             session()->flash('status', 'Booking updated.');
             $this->redirect(route('admin.bookings.show', $booking->ulid), navigate: true);
-        } else {
-            $booking = $service->create($data, $user);
-            $service->attachPassengers($booking, $this->passengerIds, $this->leadPassengerId);
-            session()->flash('status', 'Booking created.');
-            $this->redirect(route('admin.bookings.show', $booking->ulid), navigate: true);
+
+            return;
         }
+
+        $booking = $service->create($data, $user);
+        $service->attachPassengers($booking, $this->passengerIds, $this->leadPassengerId);
+
+        // If the booking was created from a supplier-doc upload, finish the
+        // pipeline: link the doc and generate the Maruti-branded voucher so
+        // the admin lands on a ready-to-share booking.
+        $voucherGenerated = false;
+        if ($this->supplierDocumentId !== null && $user !== null) {
+            $sd = SupplierDocument::query()->find($this->supplierDocumentId);
+            if ($sd !== null && $sd->booking_id === null) {
+                $sd->update(['booking_id' => $booking->id]);
+            }
+
+            try {
+                $voucherService->generate($booking, $user);
+                $voucherGenerated = true;
+            } catch (Throwable $e) {
+                // Generating the voucher is best-effort — if rendering fails
+                // (e.g. missing PHP gd extension in dev), we still save the
+                // booking and let the admin click "Generate voucher" by hand.
+                Log::warning('Auto-generation of voucher from supplier doc failed.', [
+                    'booking_id' => $booking->id,
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        session()->flash(
+            'status',
+            $voucherGenerated
+                ? 'Booking created and Maruti voucher generated.'
+                : 'Booking created.',
+        );
+        $this->redirect(route('admin.bookings.show', $booking->ulid), navigate: true);
     }
 
     /**

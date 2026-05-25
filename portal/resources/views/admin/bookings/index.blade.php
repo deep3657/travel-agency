@@ -6,6 +6,9 @@
             :breadcrumbs="[
                 ['label' => 'Bookings'],
             ]">
+            <a href="{{ route('admin.supplier-docs.new') }}" class="mt-btn-secondary mt-btn-sm">
+                Upload supplier doc (AI prefill)
+            </a>
             <a href="{{ route('admin.bookings.create') }}" class="mt-btn-primary mt-btn-sm">
                 + New booking
             </a>

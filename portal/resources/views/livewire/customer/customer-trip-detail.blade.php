@@ -58,10 +58,19 @@
                         <x-status-pill :status="$booking->status" />
                     </div>
 
-                    @if($booking->documents->isNotEmpty())
+                    @php
+                        // Only show the latest (current) version of each document type
+                        // to customers — they don't need to see archived superseded
+                        // copies, only the up-to-date voucher.
+                        $currentDocs = $booking->documents
+                            ->sortByDesc('version_number')
+                            ->unique('doc_type')
+                            ->values();
+                    @endphp
+                    @if($currentDocs->isNotEmpty())
                         <div class="mt-4 flex flex-wrap gap-2">
-                            @foreach($booking->documents as $doc)
-                                <a href="{{ URL::signedRoute('files.download', ['token' => encrypt($doc->ulid)]) }}"
+                            @foreach($currentDocs as $doc)
+                                <a href="{{ URL::signedRoute('files.download', ['token' => $doc->ulid]) }}"
                                    class="mt-btn-secondary mt-btn-sm">
                                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
                                     {{ ucwords(str_replace('_', ' ', $doc->doc_type)) }}
