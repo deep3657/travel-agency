@@ -97,7 +97,11 @@ class BookingForm extends Component
      */
     public array $newPassengers = [];
 
-    public string $newTitle = 'Mr';
+    public string $newTitle = '';
+
+    public string $newGender = '';
+
+    public string $newPaxType = 'adult';
 
     public string $newFirstName = '';
 
@@ -500,7 +504,9 @@ class BookingForm extends Component
             }
             $passenger = Passenger::query()->create([
                 'customer_id' => $customerId,
-                'title' => $p['title'] ?? 'Mr',
+                'title' => ($p['title'] ?? '') ?: null,
+                'gender' => ($p['gender'] ?? '') ?: null,
+                'pax_type' => ($p['pax_type'] ?? '') ?: null,
                 'first_name' => $first ?: '—',
                 'last_name' => $last,
             ]);
@@ -520,12 +526,16 @@ class BookingForm extends Component
         }
 
         $this->newPassengers[] = [
-            'title' => $this->newTitle ?: 'Mr',
+            'title' => $this->newTitle,
+            'gender' => $this->newGender,
+            'pax_type' => $this->newPaxType ?: 'adult',
             'first_name' => $first,
             'last_name' => $last,
         ];
 
-        $this->newTitle = 'Mr';
+        $this->newTitle = '';
+        $this->newGender = '';
+        $this->newPaxType = 'adult';
         $this->newFirstName = '';
         $this->newLastName = '';
     }
@@ -538,9 +548,10 @@ class BookingForm extends Component
 
     /**
      * Split an extracted passenger name like "JOHN A. SMITH" or "Mr John Smith"
-     * into title/first/last fields.
+     * into title/first/last fields. Only sets title/gender/pax_type when the
+     * source name explicitly carries them — never guessed.
      *
-     * @return array{title: string, first_name: string, last_name: string}|null
+     * @return array{title: string, gender: string, pax_type: string, first_name: string, last_name: string}|null
      */
     private function splitPassengerName(string $full): ?array
     {
@@ -550,16 +561,25 @@ class BookingForm extends Component
         }
 
         $parts = explode(' ', $full);
-        $titles = ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Master', 'Mstr', 'Mx'];
-        $title = 'Mr';
+        $titleMap = [
+            'mr' => ['Mr', 'male', 'adult'],
+            'mrs' => ['Mrs', 'female', 'adult'],
+            'ms' => ['Ms', 'female', 'adult'],
+            'miss' => ['Miss', 'female', 'adult'],
+            'dr' => ['Dr', '', 'adult'],
+            'master' => ['Master', 'male', 'child'],
+            'mstr' => ['Master', 'male', 'child'],
+            'mx' => ['Mx', '', 'adult'],
+        ];
+
+        $title = '';
+        $gender = '';
+        $paxType = '';
         if (count($parts) > 1) {
-            $head = rtrim($parts[0], '.');
-            foreach ($titles as $t) {
-                if (strcasecmp($head, $t) === 0) {
-                    $title = ucfirst(strtolower($t));
-                    array_shift($parts);
-                    break;
-                }
+            $head = strtolower(rtrim($parts[0], '.'));
+            if (isset($titleMap[$head])) {
+                [$title, $gender, $paxType] = $titleMap[$head];
+                array_shift($parts);
             }
         }
 
@@ -572,6 +592,8 @@ class BookingForm extends Component
 
         return [
             'title' => $title,
+            'gender' => $gender,
+            'pax_type' => $paxType,
             'first_name' => $firstName,
             'last_name' => $lastName,
         ];
