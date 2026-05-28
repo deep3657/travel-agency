@@ -41,7 +41,6 @@ class Passenger extends Model
         'ulid',
         'customer_id',
         'title',
-        'gender',
         'pax_type',
         'first_name',
         'last_name',

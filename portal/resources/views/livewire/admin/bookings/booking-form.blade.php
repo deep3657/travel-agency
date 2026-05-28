@@ -221,9 +221,6 @@
                                     @else
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-semibold uppercase tracking-wide">No type</span>
                                     @endif
-                                    @if(! empty($np['gender']))
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-semibold uppercase tracking-wide">{{ $np['gender'] }}</span>
-                                    @endif
                                     <button type="button" wire:click="removeNewPassenger({{ $i }})" class="text-xs text-rose-700 hover:text-rose-800 hover:underline">Remove</button>
                                 </div>
                             @endforeach
@@ -236,23 +233,14 @@
                     <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
                         <select wire:model="newTitle" class="mt-select sm:col-span-2">
                             <option value="">Title</option>
-                            <option value="Mr">Mr</option>
-                            <option value="Mrs">Mrs</option>
-                            <option value="Ms">Ms</option>
+                            <option value="Mr">Mr.</option>
+                            <option value="Mrs">Mrs.</option>
                             <option value="Miss">Miss</option>
-                            <option value="Dr">Dr</option>
                             <option value="Master">Master</option>
-                            <option value="Mx">Mx</option>
                         </select>
-                        <input wire:model="newFirstName" type="text" placeholder="First name" class="mt-input sm:col-span-3">
+                        <input wire:model="newFirstName" type="text" placeholder="First name" class="mt-input sm:col-span-4">
                         <input wire:model="newLastName" type="text" placeholder="Last name" class="mt-input sm:col-span-3">
-                        <select wire:model="newGender" class="mt-select sm:col-span-2">
-                            <option value="">Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <select wire:model="newPaxType" class="mt-select sm:col-span-1">
+                        <select wire:model="newPaxType" class="mt-select sm:col-span-2">
                             <option value="adult">Adult</option>
                             <option value="child">Child</option>
                             <option value="infant">Infant</option>
