@@ -47,6 +47,5 @@ CMD php artisan migrate --force \
     && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache \
-    && php artisan tinker --execute="use App\Models\Document; use App\Models\SupplierDocument; use App\Models\ExtractionJob; use Illuminate\Support\Facades\Storage; \$disk = Storage::disk('local'); foreach (SupplierDocument::all() as \$x) { if (\$x->storage_path && \$disk->exists(\$x->storage_path)) \$disk->delete(\$x->storage_path); } foreach (Document::all() as \$x) { if (\$x->pdf_path && \$disk->exists(\$x->pdf_path)) \$disk->delete(\$x->pdf_path); } ExtractionJob::query()->delete(); SupplierDocument::query()->delete(); Document::query()->delete(); echo 'DOCS_CLEANUP_OK'.PHP_EOL;" \
     && (php artisan queue:work --tries=3 --sleep=3 --max-time=3600 &) \
     && PHP_CLI_SERVER_WORKERS=4 php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
