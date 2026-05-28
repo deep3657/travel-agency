@@ -55,7 +55,7 @@ class SupplierDocStandalone extends Component
     public string $doc_type = 'flight';
 
     #[Validate('required|in:manual,ai')]
-    public string $extraction_mode = 'manual';
+    public string $extraction_mode = 'ai';
 
     #[Validate('nullable|string|max:120')]
     public ?string $supplier_name = null;

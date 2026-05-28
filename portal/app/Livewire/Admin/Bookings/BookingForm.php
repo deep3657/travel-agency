@@ -88,6 +88,22 @@ class BookingForm extends Component
     public ?int $leadPassengerId = null;
 
     /**
+     * Draft passengers created inline on this form. Each entry is
+     * ['title' => 'Mr', 'first_name' => 'John', 'last_name' => 'Doe'].
+     * On save, these are persisted as Passenger rows tied to the trip's
+     * customer and then attached to the booking alongside $passengerIds.
+     *
+     * @var list<array<string, string>>
+     */
+    public array $newPassengers = [];
+
+    public string $newTitle = 'Mr';
+
+    public string $newFirstName = '';
+
+    public string $newLastName = '';
+
+    /**
      * ULID of the SupplierDocument this booking was created from (if any).
      * Captured from the `?from_supplier_doc={ulid}` query string, threaded
      * through the form, and used on save to (a) link the doc to the new
@@ -207,6 +223,33 @@ class BookingForm extends Component
         );
 
         $this->lowConfidenceFields = $this->prefillFromExtraction($data, $this->booking_type);
+        $this->prefillPassengersFromExtraction($data);
+    }
+
+    /**
+     * Pull passenger names out of the AI-extracted payload into draft entries
+     * so the admin sees them pre-filled on the form (still editable).
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function prefillPassengersFromExtraction(array $data): void
+    {
+        $raw = $data['passengers'] ?? null;
+        if (! is_array($raw)) {
+            return;
+        }
+
+        foreach ($raw as $entry) {
+            $name = is_array($entry) ? ($entry['name'] ?? null) : (is_string($entry) ? $entry : null);
+            if (! is_string($name) || $name === '') {
+                continue;
+            }
+            $parsed = $this->splitPassengerName($name);
+            if ($parsed === null) {
+                continue;
+            }
+            $this->newPassengers[] = $parsed;
+        }
     }
 
     /**
@@ -338,9 +381,17 @@ class BookingForm extends Component
             $data['vendor_payment_due'] = $this->vendor_payment_due;
         }
 
+        $tripCustomerId = Trip::find($this->trip_id)?->customer_id;
+        $createdIds = $this->persistNewPassengers($tripCustomerId);
+        $allPassengerIds = array_values(array_unique(array_merge($this->passengerIds, $createdIds)));
+        $leadId = $this->leadPassengerId;
+        if ($leadId === null && $allPassengerIds !== []) {
+            $leadId = $allPassengerIds[0];
+        }
+
         if ($this->isEdit && $this->booking) {
             $booking = $service->update($this->booking, $data, $user);
-            $service->attachPassengers($booking, $this->passengerIds, $this->leadPassengerId);
+            $service->attachPassengers($booking, $allPassengerIds, $leadId);
             session()->flash('status', 'Booking updated.');
             $this->redirect(route('admin.bookings.show', $booking->ulid), navigate: true);
 
@@ -348,7 +399,7 @@ class BookingForm extends Component
         }
 
         $booking = $service->create($data, $user);
-        $service->attachPassengers($booking, $this->passengerIds, $this->leadPassengerId);
+        $service->attachPassengers($booking, $allPassengerIds, $leadId);
 
         // If the booking was created from a supplier-doc upload, finish the
         // pipeline: link the doc and generate the Maruti-branded voucher so
@@ -426,6 +477,104 @@ class BookingForm extends Component
             ->where('customer_id', $trip->customer_id)
             ->orderBy('first_name')
             ->get();
+    }
+
+    /**
+     * Persist any inline draft passengers as Passenger rows attached to the
+     * trip's customer, and return the resulting IDs.
+     *
+     * @return list<int>
+     */
+    private function persistNewPassengers(?int $customerId): array
+    {
+        if ($customerId === null || $this->newPassengers === []) {
+            return [];
+        }
+
+        $ids = [];
+        foreach ($this->newPassengers as $p) {
+            $first = trim((string) ($p['first_name'] ?? ''));
+            $last = trim((string) ($p['last_name'] ?? ''));
+            if ($first === '' && $last === '') {
+                continue;
+            }
+            $passenger = Passenger::query()->create([
+                'customer_id' => $customerId,
+                'title' => $p['title'] ?? 'Mr',
+                'first_name' => $first ?: '—',
+                'last_name' => $last,
+            ]);
+            $ids[] = $passenger->id;
+        }
+        $this->newPassengers = [];
+
+        return $ids;
+    }
+
+    public function addNewPassenger(): void
+    {
+        $first = trim($this->newFirstName);
+        $last = trim($this->newLastName);
+        if ($first === '' && $last === '') {
+            return;
+        }
+
+        $this->newPassengers[] = [
+            'title' => $this->newTitle ?: 'Mr',
+            'first_name' => $first,
+            'last_name' => $last,
+        ];
+
+        $this->newTitle = 'Mr';
+        $this->newFirstName = '';
+        $this->newLastName = '';
+    }
+
+    public function removeNewPassenger(int $index): void
+    {
+        unset($this->newPassengers[$index]);
+        $this->newPassengers = array_values($this->newPassengers);
+    }
+
+    /**
+     * Split an extracted passenger name like "JOHN A. SMITH" or "Mr John Smith"
+     * into title/first/last fields.
+     *
+     * @return array{title: string, first_name: string, last_name: string}|null
+     */
+    private function splitPassengerName(string $full): ?array
+    {
+        $full = trim(preg_replace('/\s+/', ' ', $full) ?? '');
+        if ($full === '') {
+            return null;
+        }
+
+        $parts = explode(' ', $full);
+        $titles = ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Master', 'Mstr', 'Mx'];
+        $title = 'Mr';
+        if (count($parts) > 1) {
+            $head = rtrim($parts[0], '.');
+            foreach ($titles as $t) {
+                if (strcasecmp($head, $t) === 0) {
+                    $title = ucfirst(strtolower($t));
+                    array_shift($parts);
+                    break;
+                }
+            }
+        }
+
+        if ($parts === []) {
+            return null;
+        }
+
+        $firstName = ucwords(strtolower(array_shift($parts)));
+        $lastName = ucwords(strtolower(implode(' ', $parts)));
+
+        return [
+            'title' => $title,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ];
     }
 
     public function render(): View

@@ -7,6 +7,7 @@ namespace App\Livewire\Admin\SupplierDocs;
 use App\Models\SupplierDocument;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -76,6 +77,28 @@ class SupplierDocsIndex extends Component
         }
 
         return $query->paginate(20);
+    }
+
+    public function delete(string $ulid): void
+    {
+        abort_unless((bool) auth()->user()?->isAdmin(), 403);
+
+        $sd = SupplierDocument::query()
+            ->with(['extractionJob'])
+            ->where('ulid', $ulid)
+            ->firstOrFail();
+
+        $disk = Storage::disk('local');
+
+        if ($sd->storage_path && $disk->exists($sd->storage_path)) {
+            $disk->delete($sd->storage_path);
+        }
+
+        $sd->extractionJob?->delete();
+        $sd->delete();
+
+        session()->flash('status', 'Supplier document deleted.');
+        unset($this->documents);
     }
 
     public function render(): View

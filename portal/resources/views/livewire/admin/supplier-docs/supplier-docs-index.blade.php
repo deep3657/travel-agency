@@ -107,6 +107,14 @@
                                             Create booking from this doc →
                                         </a>
                                     @endif
+                                    @if(auth()->user()?->isAdmin())
+                                        <button type="button"
+                                                wire:click="delete('{{ $sd->ulid }}')"
+                                                wire:confirm="Delete this supplier document? This cannot be undone."
+                                                class="text-rose-700 hover:text-rose-800 hover:underline text-xs">
+                                            Delete
+                                        </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
