@@ -67,7 +67,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="mt-label">Trip</label>
-                <select wire:model="trip_id" class="mt-select">
+                <select wire:model.live="trip_id" class="mt-select">
                     <option value="">— Select trip —</option>
                     @foreach($this->trips as $t)
                         <option value="{{ $t->id }}">{{ $t->name }} ({{ $t->customer?->name }})</option>
