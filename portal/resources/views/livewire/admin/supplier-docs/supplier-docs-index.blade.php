@@ -101,6 +101,11 @@
                                                 Generate voucher
                                             </button>
                                         </form>
+                                    @else
+                                        <a href="{{ route('admin.bookings.create', ['from_supplier_doc' => $sd->ulid]) }}"
+                                           class="text-emerald-700 hover:text-emerald-800 hover:underline text-xs">
+                                            Create booking from this doc →
+                                        </a>
                                     @endif
                                 </div>
                             </td>
