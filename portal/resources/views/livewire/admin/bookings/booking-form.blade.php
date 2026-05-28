@@ -182,73 +182,74 @@
             <div class="flex items-baseline justify-between mb-3">
                 <h4 class="font-medium text-ink-900">Passengers</h4>
                 @if($trip_id === null)
-                    <span class="text-xs text-ink-500">Select a trip to manage passengers</span>
+                    <span class="text-xs text-ink-500">Pick a trip above to link existing passengers</span>
                 @endif
             </div>
 
-            @if($trip_id !== null)
-                @if($this->availablePassengers->count() > 0)
-                    <div class="mb-4">
-                        <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">Existing passengers on this trip</div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            @foreach($this->availablePassengers as $p)
-                                <label class="flex items-center gap-2 p-2 border border-ink-200 rounded hover:bg-ink-50/50">
-                                    <input type="checkbox" wire:model.live="passengerIds" value="{{ $p->id }}" class="rounded">
-                                    <span class="text-sm text-ink-800 flex-1">{{ $p->title }} {{ $p->first_name }} {{ $p->last_name }}</span>
-                                    @if(in_array($p->id, $passengerIds))
-                                        <label class="flex items-center gap-1 text-xs text-ink-600">
-                                            <input type="radio" wire:model="leadPassengerId" value="{{ $p->id }}">
-                                            Lead
-                                        </label>
-                                    @endif
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                @if(count($newPassengers) > 0)
-                    <div class="mb-4">
-                        <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">New passengers to add</div>
-                        <div class="space-y-2">
-                            @foreach($newPassengers as $i => $np)
-                                <div class="flex items-center gap-2 p-2 border border-emerald-200 bg-emerald-50/40 rounded flex-wrap">
-                                    <span class="text-sm text-ink-800 flex-1 min-w-0">
-                                        {{ trim(($np['title'] ?? '').' '.($np['first_name'] ?? '').' '.($np['last_name'] ?? '')) }}
-                                    </span>
-                                    @if(! empty($np['pax_type']))
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-ink-100 text-ink-700 text-[10px] font-semibold uppercase tracking-wide">{{ $np['pax_type'] }}</span>
-                                    @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-semibold uppercase tracking-wide">No type</span>
-                                    @endif
-                                    <button type="button" wire:click="removeNewPassenger({{ $i }})" class="text-xs text-rose-700 hover:text-rose-800 hover:underline">Remove</button>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                <div>
-                    <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">Add new passenger</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-                        <select wire:model="newTitle" class="mt-select sm:col-span-2">
-                            <option value="">Title</option>
-                            <option value="Mr">Mr.</option>
-                            <option value="Mrs">Mrs.</option>
-                            <option value="Miss">Miss</option>
-                            <option value="Master">Master</option>
-                        </select>
-                        <input wire:model="newFirstName" type="text" placeholder="First name" class="mt-input sm:col-span-4">
-                        <input wire:model="newLastName" type="text" placeholder="Last name" class="mt-input sm:col-span-3">
-                        <select wire:model="newPaxType" class="mt-select sm:col-span-2">
-                            <option value="adult">Adult</option>
-                            <option value="child">Child</option>
-                            <option value="infant">Infant</option>
-                        </select>
-                        <button type="button" wire:click="addNewPassenger" class="mt-btn-secondary sm:col-span-1">+ Add</button>
+            @if($trip_id !== null && $this->availablePassengers->count() > 0)
+                <div class="mb-4">
+                    <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">Existing passengers on this trip</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        @foreach($this->availablePassengers as $p)
+                            <label class="flex items-center gap-2 p-2 border border-ink-200 rounded hover:bg-ink-50/50">
+                                <input type="checkbox" wire:model.live="passengerIds" value="{{ $p->id }}" class="rounded">
+                                <span class="text-sm text-ink-800 flex-1">{{ $p->title }} {{ $p->first_name }} {{ $p->last_name }}</span>
+                                @if(in_array($p->id, $passengerIds))
+                                    <label class="flex items-center gap-1 text-xs text-ink-600">
+                                        <input type="radio" wire:model="leadPassengerId" value="{{ $p->id }}">
+                                        Lead
+                                    </label>
+                                @endif
+                            </label>
+                        @endforeach
                     </div>
                 </div>
             @endif
+
+            @if(count($newPassengers) > 0)
+                <div class="mb-4">
+                    <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">New passengers to add</div>
+                    <div class="space-y-2">
+                        @foreach($newPassengers as $i => $np)
+                            <div class="flex items-center gap-2 p-2 border border-emerald-200 bg-emerald-50/40 rounded flex-wrap">
+                                <span class="text-sm text-ink-800 flex-1 min-w-0">
+                                    {{ trim(($np['title'] ?? '').' '.($np['first_name'] ?? '').' '.($np['last_name'] ?? '')) }}
+                                </span>
+                                @if(! empty($np['pax_type']))
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-ink-100 text-ink-700 text-[10px] font-semibold uppercase tracking-wide">{{ $np['pax_type'] }}</span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-semibold uppercase tracking-wide">No type</span>
+                                @endif
+                                <button type="button" wire:click="removeNewPassenger({{ $i }})" class="text-xs text-rose-700 hover:text-rose-800 hover:underline">Remove</button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <div>
+                <div class="text-xs uppercase tracking-wide text-ink-500 mb-2">Add new passenger</div>
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                    <select wire:model="newTitle" class="mt-select sm:col-span-2">
+                        <option value="">Title</option>
+                        <option value="Mr">Mr.</option>
+                        <option value="Mrs">Mrs.</option>
+                        <option value="Miss">Miss</option>
+                        <option value="Master">Master</option>
+                    </select>
+                    <input wire:model="newFirstName" type="text" placeholder="First name" class="mt-input sm:col-span-4">
+                    <input wire:model="newLastName" type="text" placeholder="Last name" class="mt-input sm:col-span-3">
+                    <select wire:model="newPaxType" class="mt-select sm:col-span-2">
+                        <option value="adult">Adult</option>
+                        <option value="child">Child</option>
+                        <option value="infant">Infant</option>
+                    </select>
+                    <button type="button" wire:click="addNewPassenger" class="mt-btn-secondary sm:col-span-1">+ Add</button>
+                </div>
+                <p class="text-xs text-ink-500 mt-2">
+                    Drafts are saved with the booking. Their customer record is taken from the selected trip on save.
+                </p>
+            </div>
         </div>
 
         <div class="mt-6">
