@@ -12,10 +12,10 @@
             {{-- Contact info --}}
             <div class="lg:col-span-2 space-y-4">
                 @foreach ([
-                    ['Email',   'info@marutitravels.in',                    'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
-                    ['Phone',   '+91 98765 43210',                         'M3 5a2 2 0 012-2h2.28a2 2 0 011.95 1.55l.7 3.06a2 2 0 01-1.06 2.21l-1.43.71a11 11 0 005.06 5.06l.71-1.43a2 2 0 012.21-1.06l3.06.7A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z'],
+                    ['Email',   'marutitravelscc@gmail.com',                'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'],
+                    ['Phone',   '+91 93310 27837',                         'M3 5a2 2 0 012-2h2.28a2 2 0 011.95 1.55l.7 3.06a2 2 0 01-1.06 2.21l-1.43.71a11 11 0 005.06 5.06l.71-1.43a2 2 0 012.21-1.06l3.06.7A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z'],
                     ['Hours',   'Mon–Sat · 9 AM to 7 PM IST',              'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-                    ['Address', "123 Travel Street, Andheri West\nMumbai, Maharashtra 400053", 'M17.66 16.66L13.41 20.9a2 2 0 01-2.83 0l-4.24-4.24a8 8 0 1111.31 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z'],
+                    ['Address', 'Kolkata, West Bengal', 'M17.66 16.66L13.41 20.9a2 2 0 01-2.83 0l-4.24-4.24a8 8 0 1111.31 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z'],
                 ] as [$label, $value, $iconPath])
                     <div class="mt-card mt-card-body">
                         <div class="flex gap-4">

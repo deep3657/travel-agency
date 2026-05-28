@@ -21,15 +21,17 @@
             <div class="flex items-center gap-5">
                 <span class="inline-flex items-center gap-1.5">
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                    info@marutitravels.in
+                    marutitravelscc@gmail.com
                 </span>
                 <span class="inline-flex items-center gap-1.5">
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.95 1.55l.7 3.06a2 2 0 01-1.06 2.21l-1.43.71a11 11 0 005.06 5.06l.71-1.43a2 2 0 012.21-1.06l3.06.7A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"/></svg>
-                    +91 98765 43210
+                    +91 93310 27837
                 </span>
             </div>
             <div class="flex items-center gap-4">
                 <a href="{{ route('contact') }}" class="hover:text-white">Need help?</a>
+                <span class="text-brand-300/50">|</span>
+                <a href="{{ route('login') }}" class="hover:text-white">Staff login</a>
             </div>
         </div>
     </div>
@@ -103,6 +105,7 @@
                         <li><a href="{{ route('about') }}" class="hover:text-white transition">About us</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-white transition">Contact</a></li>
                         <li><a href="{{ route('customer.login') }}" class="hover:text-white transition">Customer login</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-white transition">Staff login</a></li>
                     </ul>
                 </div>
                 <div>
@@ -110,15 +113,15 @@
                     <ul class="space-y-2 text-sm text-ink-400">
                         <li class="inline-flex items-start gap-2">
                             <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            info@marutitravels.in
+                            marutitravelscc@gmail.com
                         </li>
                         <li class="inline-flex items-start gap-2">
                             <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.95 1.55l.7 3.06a2 2 0 01-1.06 2.21l-1.43.71a11 11 0 005.06 5.06l.71-1.43a2 2 0 012.21-1.06l3.06.7A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"/></svg>
-                            +91 98765 43210
+                            +91 93310 27837
                         </li>
                         <li class="inline-flex items-start gap-2">
                             <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.66 16.66L13.41 20.9a2 2 0 01-2.83 0l-4.24-4.24a8 8 0 1111.31 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            Mumbai, Maharashtra
+                            Kolkata, West Bengal
                         </li>
                     </ul>
                 </div>

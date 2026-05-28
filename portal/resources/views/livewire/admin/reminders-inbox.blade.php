@@ -8,7 +8,7 @@
         @endif
     </button>
 
-    <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-80 bg-white border border-ink-200 rounded-xl shadow-card z-50">
+    <div x-show="open" x-cloak @click.away="open = false" x-transition class="absolute right-0 mt-2 w-80 bg-white border border-ink-200 rounded-xl shadow-card z-50">
         <div class="flex justify-between items-center px-4 py-3 border-b border-ink-200/70">
             <span class="font-semibold text-sm text-ink-900">Reminders</span>
             @if($this->unreadCount > 0)

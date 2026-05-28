@@ -21,8 +21,12 @@ use App\Policies\PackagePolicy;
 use App\Policies\QuotationPolicy;
 use App\Policies\TripPolicy;
 use App\Policies\VendorPolicy;
+use App\Models\User;
 use App\Services\Pdf\DompdfRenderer;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -42,5 +46,20 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Quotation::class, QuotationPolicy::class);
         Gate::policy(Booking::class, BookingPolicy::class);
         Gate::policy(ChangeRequest::class, ChangeRequestPolicy::class);
+
+        VerifyEmail::createUrlUsing(function (object $notifiable): string {
+            $routeName = ($notifiable instanceof User && $notifiable->user_type === User::TYPE_CUSTOMER)
+                ? 'customer.verification.verify'
+                : 'verification.verify';
+
+            return URL::temporarySignedRoute(
+                $routeName,
+                Carbon::now()->addMinutes(config('auth.verification.expire', 60)),
+                [
+                    'id' => $notifiable->getKey(),
+                    'hash' => sha1($notifiable->getEmailForVerification()),
+                ],
+            );
+        });
     }
 }

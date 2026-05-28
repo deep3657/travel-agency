@@ -1,6 +1,10 @@
 <x-guest-layout>
-    <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Welcome back</h1>
-    <p class="text-sm text-ink-500 mb-6">Sign in to the Maruti Travels staff portal.</p>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 mb-3 rounded-full bg-brand-50 text-brand-700 text-[11px] font-semibold uppercase tracking-wide">
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3zM2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/></svg>
+        Staff portal
+    </div>
+    <h1 class="font-display text-2xl font-bold text-ink-900 mb-1">Staff login</h1>
+    <p class="text-sm text-ink-500 mb-6">Sign in with your Maruti Travels staff account (admin or agent).</p>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

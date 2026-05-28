@@ -6,6 +6,7 @@ use App\Http\Controllers\Customer\CancellationController;
 use App\Http\Controllers\Customer\EnquiryController;
 use App\Http\Controllers\Customer\LoginController;
 use App\Http\Controllers\Customer\RegisterController;
+use App\Http\Controllers\Customer\VerificationController;
 use App\Livewire\Customer\CustomerDashboard;
 use App\Livewire\Customer\CustomerEnquiriesIndex;
 use App\Livewire\Customer\CustomerProfile;
@@ -28,6 +29,24 @@ Route::prefix('customer')->group(function () {
     });
 
     Route::post('/logout', [LoginController::class, 'destroy'])->name('customer.logout');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email verification (customer guard)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('/email/verify', [VerificationController::class, 'notice'])
+            ->name('customer.verification.notice');
+
+        Route::post('/email/verification-notification', [VerificationController::class, 'send'])
+            ->middleware('throttle:6,1')
+            ->name('customer.verification.send');
+    });
+
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('customer.verification.verify');
 });
 
 /*
@@ -35,7 +54,7 @@ Route::prefix('customer')->group(function () {
 | Protected Customer Account Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:customer', 'verified'])->prefix('account')->name('customer.')->group(function () {
+Route::middleware(['auth:customer', 'verified.customer'])->prefix('account')->name('customer.')->group(function () {
     Route::get('/', CustomerDashboard::class)->name('account');
     Route::get('/profile', CustomerProfile::class)->name('profile');
     Route::get('/enquiries', CustomerEnquiriesIndex::class)->name('enquiries');

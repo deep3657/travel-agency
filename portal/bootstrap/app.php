@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -21,11 +22,19 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Spatie Permission middleware aliases (LLD §7).
+        $middleware->trustProxies(at: '*');
+
+        $middleware->redirectGuestsTo(function (Request $request) {
+            return $request->is('account*') || $request->is('customer*')
+                ? route('customer.login')
+                : route('login');
+        });
+
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'verified.customer' => \App\Http\Middleware\EnsureCustomerEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
