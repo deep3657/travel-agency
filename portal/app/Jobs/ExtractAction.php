@@ -13,6 +13,7 @@ use App\Services\Ai\Schemas\HotelSchema;
 use App\Services\AiBudgetTracker;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ExtractAction implements ShouldQueue
@@ -54,44 +55,62 @@ class ExtractAction implements ShouldQueue
             return;
         }
 
-        $base64 = base64_encode((string) file_get_contents($filePath));
-
-        $result = null;
-        $provider = null;
+        [$base64, $mime, $tempPng] = $this->prepareInput($filePath, $sd->mime);
 
         try {
-            if (! empty(config('services.gemini.api_key'))) {
-                $client = new GeminiClient;
-                $result = $client->extract($base64, $sd->mime, $schema);
-                $provider = 'gemini';
-            }
-        } catch (Throwable $e) {
-            // Fall through to OpenAI
-        }
+            $result = null;
+            $provider = null;
+            $primary = strtolower((string) config('services.ai.primary', 'gemini'));
 
-        if ($result === null) {
-            try {
-                if (! empty(config('openai.api_key'))) {
-                    $client = new OpenAiClient;
-                    $result = $client->extract($base64, $sd->mime, $schema);
-                    $provider = 'openai';
+            $providers = $primary === 'openai' ? ['openai', 'gemini'] : ['gemini', 'openai'];
+
+            $hasGemini = ! empty(config('services.gemini.api_key'));
+            $hasOpenai = ! empty(config('services.openai.api_key')) || ! empty(config('openai.api_key'));
+
+            Log::info('ExtractAction provider config', [
+                'job_id' => $job->id,
+                'mime' => $mime,
+                'primary' => $primary,
+                'order' => $providers,
+                'has_gemini' => $hasGemini,
+                'has_openai' => $hasOpenai,
+            ]);
+
+            foreach ($providers as $p) {
+                if ($result !== null) {
+                    break;
                 }
-            } catch (Throwable $e) {
-                $job->update([
-                    'status' => 'failed',
-                    'error_code' => 'AI_ERROR',
-                    'error_message' => $e->getMessage(),
-                    'request_completed_at' => now(),
-                ]);
-
-                return;
+                try {
+                    if ($p === 'gemini' && $hasGemini) {
+                        $client = new GeminiClient;
+                        $result = $client->extract($base64, $mime, $schema);
+                        $provider = 'gemini';
+                    } elseif ($p === 'openai' && $hasOpenai) {
+                        $client = new OpenAiClient;
+                        $result = $client->extract($base64, $mime, $schema);
+                        $provider = 'openai';
+                    } else {
+                        Log::info("ExtractAction {$p} skipped (no key configured)", ['job_id' => $job->id]);
+                    }
+                } catch (Throwable $e) {
+                    Log::error("ExtractAction {$p} failed", [
+                        'job_id' => $job->id,
+                        'mime' => $mime,
+                        'error' => mb_substr($e->getMessage(), 0, 500),
+                        'class' => $e::class,
+                    ]);
+                }
             }
-        }
 
-        if ($result === null) {
-            $nullClient = new NullAiClient;
-            $result = $nullClient->extract($base64, $sd->mime, $schema);
-            $provider = 'null';
+            if ($result === null) {
+                $nullClient = new NullAiClient;
+                $result = $nullClient->extract($base64, $mime, $schema);
+                $provider = 'null';
+            }
+        } finally {
+            if ($tempPng !== null && file_exists($tempPng)) {
+                @unlink($tempPng);
+            }
         }
 
         $startTime = $job->request_started_at;
@@ -110,5 +129,46 @@ class ExtractAction implements ShouldQueue
         ]);
 
         $budget->recordCost($job->refresh());
+    }
+
+    /**
+     * For PDFs, render the first page to PNG via pdftoppm so vision models
+     * that don't accept PDFs (e.g. OpenAI gpt-4o-mini) can still process it.
+     *
+     * @return array{0: string, 1: string, 2: ?string} [base64, mime, temp-path-or-null]
+     */
+    private function prepareInput(string $filePath, string $originalMime): array
+    {
+        if (! str_starts_with($originalMime, 'application/pdf')) {
+            return [base64_encode((string) file_get_contents($filePath)), $originalMime, null];
+        }
+
+        $prefix = tempnam(sys_get_temp_dir(), 'pdf2img_');
+        if ($prefix === false) {
+            Log::warning('ExtractAction: tempnam failed; sending raw PDF');
+
+            return [base64_encode((string) file_get_contents($filePath)), $originalMime, null];
+        }
+        @unlink($prefix);
+
+        $cmd = sprintf(
+            'pdftoppm -png -r 150 -f 1 -l 1 %s %s 2>&1',
+            escapeshellarg($filePath),
+            escapeshellarg($prefix),
+        );
+        exec($cmd, $output, $rc);
+
+        $generated = $prefix.'-1.png';
+        if ($rc !== 0 || ! file_exists($generated)) {
+            Log::warning('ExtractAction: pdftoppm failed; sending raw PDF', [
+                'cmd' => $cmd,
+                'rc' => $rc,
+                'output' => $output,
+            ]);
+
+            return [base64_encode((string) file_get_contents($filePath)), $originalMime, null];
+        }
+
+        return [base64_encode((string) file_get_contents($generated)), 'image/png', $generated];
     }
 }

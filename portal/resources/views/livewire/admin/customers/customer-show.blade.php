@@ -49,7 +49,18 @@
                         @endif
                         <div>
                             <dt class="text-xs uppercase tracking-wide text-ink-500">Email</dt>
-                            <dd class="text-sm text-ink-800 break-all">{{ $customer->email }}</dd>
+                            <dd class="text-sm text-ink-800 break-all flex items-center gap-2 flex-wrap">
+                                <span>{{ $customer->email }}</span>
+                                @if ($customer->user)
+                                    @if ($customer->user->hasVerifiedEmail())
+                                        <span class="mt-pill-green text-[10px]">Verified</span>
+                                    @else
+                                        <span class="mt-pill-amber text-[10px]">Unverified</span>
+                                    @endif
+                                @else
+                                    <span class="text-[10px] text-ink-400">No portal account</span>
+                                @endif
+                            </dd>
                         </div>
                         @if ($customer->dob)
                             <div>
@@ -115,11 +126,33 @@
                 {{-- Actions card --}}
                 <div class="mt-card mt-card-body">
                     <h3 class="text-xs font-semibold text-ink-500 uppercase tracking-wide mb-4">Actions</h3>
+
+                    @if (session('verify_status'))
+                        <div class="mt-alert-success mb-3 text-xs">
+                            <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span>{{ session('verify_status') }}</span>
+                        </div>
+                    @endif
+                    @if (session('verify_error'))
+                        <div class="mt-alert-error mb-3 text-xs">
+                            <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4a2 2 0 00-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/></svg>
+                            <span>{{ session('verify_error') }}</span>
+                        </div>
+                    @endif
+
                     <div class="flex flex-col gap-2">
                         @can('update', $customer)
                             <a href="{{ route('admin.customers.edit', $customer->ulid) }}" class="mt-btn-primary mt-btn-sm">
                                 Edit customer
                             </a>
+                            @if ($customer->user && ! $customer->user->hasVerifiedEmail())
+                                <button type="button"
+                                        wire:click="markEmailVerified"
+                                        wire:confirm="Mark this customer's email as verified? Use only when email delivery fails or for testing."
+                                        class="mt-btn-ghost mt-btn-sm">
+                                    Mark email verified
+                                </button>
+                            @endif
                         @endcan
                         <a href="{{ route('admin.customers.index') }}" class="mt-btn-ghost mt-btn-sm">
                             ← Back to list

@@ -47,7 +47,12 @@ class SupplierDocsIndex extends Component
     public function documents(): LengthAwarePaginator
     {
         $query = SupplierDocument::query()
-            ->with(['booking.customer', 'supplierVendor', 'uploadedBy'])
+            ->with([
+                'booking.customer',
+                'booking.documents' => fn ($q) => $q->orderByDesc('version_number')->orderByDesc('id'),
+                'supplierVendor',
+                'uploadedBy',
+            ])
             ->orderByDesc('created_at');
 
         if ($this->search !== '') {

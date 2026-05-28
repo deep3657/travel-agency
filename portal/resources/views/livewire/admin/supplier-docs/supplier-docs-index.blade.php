@@ -79,10 +79,30 @@
                                 @endif
                             </td>
                             <td class="text-right">
-                                <a href="{{ URL::signedRoute('files.download', ['token' => $sd->ulid]) }}"
-                                   class="text-brand-700 hover:text-brand-800 hover:underline text-sm">
-                                    Download
-                                </a>
+                                @php
+                                    $voucher = $sd->booking?->documents
+                                        ?->sortByDesc('version_number')
+                                        ?->first();
+                                @endphp
+                                <div class="flex flex-col items-end gap-1">
+                                    <a href="{{ URL::signedRoute('files.download', ['token' => $sd->ulid]) }}"
+                                       class="text-brand-700 hover:text-brand-800 hover:underline text-sm">
+                                        Download original
+                                    </a>
+                                    @if($voucher)
+                                        <a href="{{ URL::signedRoute('files.download', ['token' => $voucher->ulid]) }}"
+                                           class="text-emerald-700 hover:text-emerald-800 hover:underline text-xs">
+                                            Download voucher (v{{ $voucher->version_number }})
+                                        </a>
+                                    @elseif($sd->booking)
+                                        <form method="POST" action="{{ route('admin.vouchers.generate', $sd->booking->ulid) }}">
+                                            @csrf
+                                            <button class="text-ink-500 hover:text-ink-700 hover:underline text-xs">
+                                                Generate voucher
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty

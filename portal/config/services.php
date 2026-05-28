@@ -45,4 +45,8 @@ return [
         'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
     ],
 
+    'ai' => [
+        'primary' => env('AI_PROVIDER_PRIMARY', 'gemini'),
+    ],
+
 ];

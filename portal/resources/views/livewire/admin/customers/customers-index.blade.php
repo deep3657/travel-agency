@@ -42,7 +42,18 @@
                                 @endif
                             </td>
                             <td>{{ $customer->phone }}</td>
-                            <td>{{ $customer->email }}</td>
+                            <td>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span>{{ $customer->email }}</span>
+                                    @if ($customer->user)
+                                        @if ($customer->user->hasVerifiedEmail())
+                                            <span class="mt-pill-green text-[10px]">Verified</span>
+                                        @else
+                                            <span class="mt-pill-amber text-[10px]">Unverified</span>
+                                        @endif
+                                    @endif
+                                </div>
+                            </td>
                             <td class="font-mono">{{ $customer->gstin ?? '—' }}</td>
                             <td>{{ $customer->city ?? '—' }}</td>
                             <td class="text-right space-x-3">

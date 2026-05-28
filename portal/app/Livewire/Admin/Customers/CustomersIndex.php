@@ -50,6 +50,7 @@ class CustomersIndex extends Component
     public function customers(): LengthAwarePaginator
     {
         $query = Customer::query()
+            ->with('user')
             ->when($this->showDeleted && auth()->user()?->isAdmin(), fn ($q) => $q->withTrashed())
             ->when($this->search !== '', function ($q) {
                 $term = '%'.$this->search.'%';

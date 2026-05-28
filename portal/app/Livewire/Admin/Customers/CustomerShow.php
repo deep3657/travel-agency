@@ -6,6 +6,7 @@ namespace App\Livewire\Admin\Customers;
 
 use App\Models\Customer;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 /**
@@ -22,6 +23,29 @@ class CustomerShow extends Component
     {
         $this->customer = Customer::where('ulid', $ulid)->firstOrFail();
         abort_unless(auth()->user()?->can('view', $this->customer), 403);
+    }
+
+    public function markEmailVerified(): void
+    {
+        abort_unless(auth()->user()?->can('update', $this->customer), 403);
+
+        $user = $this->customer->user;
+        if ($user === null) {
+            session()->flash('verify_error', 'No portal account exists for this customer yet.');
+
+            return;
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            session()->flash('verify_status', 'Email is already verified.');
+
+            return;
+        }
+
+        $user->forceFill(['email_verified_at' => Carbon::now()])->save();
+        $this->customer->refresh();
+
+        session()->flash('verify_status', 'Customer email marked as verified.');
     }
 
     public function render(): View
